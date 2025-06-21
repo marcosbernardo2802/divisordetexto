@@ -1,940 +1,584 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <title>Divisor de Texto - Crônicas Estelares</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divisor de Texto Crônicas Estelares</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Divida textos longos em partes menores por caracteres ou palavras para facilitar a narração com IAs (TTS). Uma ferramenta gratuita para criadores de conteúdo.">
+
+    <!-- FAVICON (ÍCONE DA ABA DO NAVEGADOR) -->
+    <link rel="icon" href="https://raw.githubusercontent.com/marcosbernardo2802/portal/main/images/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/marcosbernardo2802/portal/main/images/favicon.png">
+
+    <!-- Importando a fonte temática do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
-        /* --- INÍCIO: Definição de Variáveis de Tema (Modo Claro/Escuro) --- */
+        /* ---- VARIÁVEIS DE TEMA (SINCRONIZADAS COM O PORTAL) ---- */
         :root {
-            /* Cores do Modo Escuro (Padrão) */
-            --bg-color: #0a0a1a;
-            --container-bg: rgba(15, 15, 40, 0.9);
-            --container-border: rgba(70, 70, 150, 0.5);
-            --container-shadow: rgba(0, 191, 255, 0.3);
-            --text-primary: #e0e0ff;
-            --text-secondary: #a0a0ff;
-            --text-tertiary: #b0e0e6;
-            --header-text: #87ceeb;
-            --header-shadow: rgba(135, 206, 235, 0.7);
-            --header-hover-shadow: rgba(135, 206, 235, 0.9);
-            --link-color: #00bfff;
-            --link-hover-color: #87ceeb;
-            --part-bg: rgba(25, 25, 50, 0.8);
-            --part-border: #404060;
-            --part-header-border: #505080;
-            --input-bg: #ffffff;
-            --input-text: #000000;
-            --input-border: #ced4da;
-            --input-focus-border: #007bff;
-            --input-focus-shadow: rgba(0, 123, 255, 0.25);
-            --counter-bg: #e0f2f7;
-            --counter-text: #333333;
-            /* Cores para botões de ação */
-            --btn-delete-bg-start: #dc3545;
-            --btn-delete-bg-end: #ff6347;
-            --btn-delete-hover-bg-start: #c82333;
-            --btn-delete-hover-bg-end: #ff4500;
-            
-            --btn-main-copy-bg-start: #28a745; 
-            --btn-main-copy-bg-end: #32cd32;
-            --btn-main-copy-hover-bg-start: #218838;
-            --btn-main-copy-hover-bg-end: #228b22;
-
-            --btn-part-copy-bg-start: var(--btn-main-copy-bg-start); 
-            --btn-part-copy-bg-end: var(--btn-main-copy-bg-end);     
-            --btn-part-copy-hover-bg-start: var(--btn-main-copy-hover-bg-start); 
-            --btn-part-copy-hover-bg-end: var(--btn-main-copy-hover-bg-end);   
-            
-            --btn-main-copied-feedback-bg-start: #48dbfb; 
-            --btn-main-copied-feedback-bg-end: #0abde3;
-            --btn-main-copied-feedback-shadow: rgba(0, 191, 255, 0.5);
-
-            --btn-part-copied-feedback-bg-start: var(--btn-main-copied-feedback-bg-start); 
-            --btn-part-copied-feedback-bg-end: var(--btn-main-copied-feedback-bg-end);   
-            --btn-part-copied-feedback-shadow: var(--btn-main-copied-feedback-shadow); 
-
-            /* Variáveis de animação */
-            --animation-duration-fast: 0.3s;
-            --animation-duration-normal: 0.5s;
+            --color-bg: #0a0f18;
+            --color-text: #e0e0e0;
+            --color-primary: #00f2fe;
+            --color-secondary: #e63946; /* Cor de "perigo" (vermelho) */
+            --color-card-bg: rgba(16, 26, 45, 0.6); /* Transparência aumentada */
+            --color-card-border: #223354;
+            --color-shadow: rgba(0, 242, 254, 0.2);
+            --color-copy-initial: #28a745; /* Verde inicial */
+            --color-copy-copied: #007bff; /* Azul para "copiado" */
+            --font-main: 'Exo 2', sans-serif;
         }
 
-        body.light-mode {
-            /* Cores do Modo Claro */
-            --bg-color: #f4f6f8;
-            --container-bg: rgba(255, 255, 255, 0.95);
-            --container-border: #d1d9e6;
-            --container-shadow: rgba(0, 0, 0, 0.1);
-            --text-primary: #333333;
-            --text-secondary: #0056b3;
-            --text-tertiary: #004085;
-            --header-text: #0056b3;
-            --header-shadow: rgba(0, 86, 179, 0.4);
-            --header-hover-shadow: rgba(0, 86, 179, 0.6);
-            --link-color: #007bff;
-            --link-hover-color: #0056b3;
-            --part-bg: #f8f9fa;
-            --part-border: #dee2e6;
-            --part-header-border: #e9ecef;
-            --input-bg: #ffffff;
-            --input-text: #000000;
-            --input-border: #ced4da;
-            --input-focus-border: #007bff;
-            --input-focus-shadow: rgba(0, 123, 255, 0.25);
-            --counter-bg: #e9ecef;
-            --counter-text: #333333;
-            
-            --btn-delete-bg-start: #dc3545;
-            --btn-delete-bg-end: #ff6347;
-            --btn-delete-hover-bg-start: #c82333;
-            --btn-delete-hover-bg-end: #ff4500;
-
-            --btn-main-copy-bg-start: #28a745;
-            --btn-main-copy-bg-end: #32cd32;
-            --btn-main-copy-hover-bg-start: #218838;
-            --btn-main-copy-hover-bg-end: #228b22;
-
-            --btn-part-copy-bg-start: var(--btn-main-copy-bg-start); 
-            --btn-part-copy-bg-end: var(--btn-main-copy-bg-end);   
-            --btn-part-copy-hover-bg-start: var(--btn-main-copy-hover-bg-start); 
-            --btn-part-copy-hover-bg-end: var(--btn-main-copy-hover-bg-end);  
-            
-            --btn-main-copied-feedback-bg-start: #48dbfb;
-            --btn-main-copied-feedback-bg-end: #0abde3;
-            --btn-main-copied-feedback-shadow: rgba(0, 123, 255, 0.4);
-
-            --btn-part-copied-feedback-bg-start: var(--btn-main-copied-feedback-bg-start); 
-            --btn-part-copied-feedback-bg-end: var(--btn-main-copied-feedback-bg-end);   
-            --btn-part-copied-feedback-shadow: var(--btn-main-copied-feedback-shadow); 
-        }
-        /* --- FIM: Definição de Variáveis de Tema --- */
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        body.light-theme {
+            --color-bg: #f4f7f9;
+            --color-text: #333333;
+            --color-primary: #005fbd;
+            --color-secondary: #d90429; /* Vermelho mais forte para tema claro */
+            --color-card-bg: rgba(255, 255, 255, 0.6); /* Transparência aumentada */
+            --color-card-border: #d1d9e0;
+            --color-shadow: rgba(0, 0, 0, 0.1);
+            --color-copy-initial: #218838;
+            --color-copy-copied: #0056b3;
         }
 
+        /* ---- ESTILOS GERAIS E RESET ---- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html {
+            scroll-behavior: smooth;
+        }
         body {
-            font-family: 'Roboto', sans-serif; 
-            margin: 0;
-            padding: 20px;
-            background-color: var(--bg-color);
-            background-image: url('https://placehold.co/1920x1080/0a0a1a/ffffff?text=Crônicas+Estelares');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--text-primary);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            font-family: var(--font-main);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
             min-height: 100vh;
-            transition: background-color var(--animation-duration-fast) ease, color var(--animation-duration-fast) ease;
         }
-        .container {
-            position: relative; 
-            background-color: var(--container-bg);
-            padding: 35px;
-            border-radius: 12px;
-            box-shadow: 0 0 30px var(--container-shadow);
-            max-width: 900px;
-            width: 100%;
-            border: 1px solid var(--container-border);
-            transition: background-color var(--animation-duration-fast) ease, border-color var(--animation-duration-fast) ease;
-        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
         
-        #theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 1px solid var(--container-border);
-            color: var(--text-secondary);
-            font-size: 1.2em;
+        /* ---- BOTÕES FLUTUANTES ---- */
+        .floating-button {
+            position: fixed;
+            z-index: 1000;
             cursor: pointer;
+            background-color: var(--color-card-bg);
+            border: 1px solid var(--color-card-border);
             border-radius: 50%;
             width: 40px;
             height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: color var(--animation-duration-fast), background-color var(--animation-duration-fast), transform 0.2s;
+            transition: all 0.3s ease;
         }
-        #theme-toggle:hover {
-            background-color: var(--part-bg);
+        .floating-button:hover {
             transform: scale(1.1);
+            box-shadow: 0 0 10px var(--color-shadow);
+        }
+        .floating-button svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--color-primary);
         }
         
-        h1 {
-            text-align: center;
-            color: var(--header-text);
-            font-size: 2.2em;
-            text-shadow: 0 0 10px var(--header-shadow);
-            margin-top: 0;
-            margin-bottom: 0;
+        .theme-switcher { top: 20px; right: 20px; }
+        .back-to-portal { top: 20px; left: 20px; }
+        .back-to-top {
+            bottom: 20px;
+            right: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
         }
-        .channel-link {
-            display: block;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-            color: var(--link-color);
-            text-decoration: none;
-            transition: color var(--animation-duration-fast) ease, text-shadow var(--animation-duration-fast) ease;
-            text-shadow: 0 0 5px var(--link-color);
-            padding-top: 10px;
-        }
-        .title-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            margin-bottom: 10px;
-            transition: color var(--animation-duration-fast) ease, text-shadow var(--animation-duration-fast) ease;
-        }
-        .title-link:hover h1 {
-            color: var(--header-text);
-            text-shadow: 0 0 15px var(--header-hover-shadow);
-        }
-        .image-link {
-            display: block;
-            margin: 0 auto 20px auto; 
-            text-align: center;
-        }
-        .horizontal-divider {
-            height: 1px;
-            background-color: var(--container-border); 
-            margin: 0 auto 20px auto; 
-            width: 90%; 
-            border-radius: 1px;
-        }
-        .app-logo {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 0 25px var(--container-shadow);
-            transition: transform var(--animation-duration-fast) ease;
-        }
-        .app-logo:hover {
-            transform: scale(1.01);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .label-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        label {
-            font-weight: 700;
-            color: var(--text-secondary);
-            font-size: 1.1em;
-        }
-        #copyMainTextButton {
-            background: linear-gradient(45deg, var(--btn-main-copy-bg-start), var(--btn-main-copy-bg-end));
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: background var(--animation-duration-fast), transform 0.2s, box-shadow var(--animation-duration-fast);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-        #copyMainTextButton:hover {
-            background: linear-gradient(45deg, var(--btn-main-copy-hover-bg-start), var(--btn-main-copy-hover-bg-end));
-            transform: translateY(-1px);
-            box-shadow: 0 3px 7px rgba(0,0,0,0.2);
-        }
-        #copyMainTextButton.copied {
-            background: linear-gradient(45deg, var(--btn-main-copied-feedback-bg-start), var(--btn-main-copied-feedback-bg-end));
-            box-shadow: 0 0 10px var(--btn-main-copied-feedback-shadow);
-        }
-        #copyMainTextButton i {
-            margin-right: 5px;
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
-        textarea { 
+
+        .light-theme #theme-icon-dark, body:not(.light-theme) #theme-icon-light { display: none; }
+
+        /* ---- ESTILO DO APLICATIVO ---- */
+        .tool-banner {
+            margin-bottom: 3rem; /* Espaço aumentado */
+        }
+        .tool-banner a {
+            display: block;
+            line-height: 0;
+        }
+        .tool-banner-image {
             width: 100%;
-            padding: 15px;
-            border: 1px solid var(--input-border);
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1em;
-            font-family: 'Roboto', sans-serif;
-            min-height: 260px; 
-            resize: vertical;
-            transition: border-color var(--animation-duration-fast), box-shadow var(--animation-duration-fast);
-            background-color: var(--input-bg);
-            color: var(--input-text);
+            height: auto;
+            max-height: 125px; 
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--color-card-border);
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
-        textarea:focus {
-            outline: none;
-            border-color: var(--input-focus-border);
-            box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+        .tool-banner-image:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
         }
-        .char-counter-wrapper {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center; 
-            gap: 15px; 
-            margin-top: 5px;
-            margin-bottom: 15px;
+
+        .app-card {
+            background-color: var(--color-card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--color-card-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
-        .generic-char-counter { 
-            font-size: 0.9em;
-            color: var(--counter-text);
-            background-color: var(--counter-bg);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            border: 1px solid var(--container-border);
-            transition: background-color var(--animation-duration-fast), color var(--animation-duration-fast), border-color var(--animation-duration-fast);
-            display: flex; 
-            align-items: center; 
+        .light-theme .app-card { box-shadow: 0 8px 25px var(--color-shadow); }
+
+        .app-card h2 { font-size: 1.8rem; color: var(--color-primary); margin-bottom: 1.5rem; text-align: center; text-shadow: 0 0 8px var(--color-shadow); }
+        .form-group { margin-bottom: 1.5rem; }
+        .label-wrapper { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 10px; }
+        .label-wrapper > label { font-size: 1em; font-weight: 400; color: var(--color-text); opacity: 0.8; }
+        
+        .copy-main-btn {
+            background-color: var(--color-copy-initial);
+            color: #fff;
+            border: none;
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9em;
+            font-weight: 700; font-family: var(--font-main); transition: all 0.2s ease;
         }
-        .narration-time-main { 
-            font-size: 0.9em;
-            color: var(--link-color); 
-            background-color: var(--counter-bg);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            border: 1px solid var(--container-border);
-            transition: background-color var(--animation-duration-fast), color var(--animation-duration-fast), border-color var(--animation-duration-fast);
-            display: flex;
-            align-items: center;
+        .copy-main-btn:hover { opacity: 0.8; }
+        .copy-main-btn.copied { background-color: var(--color-copy-copied) !important; }
+        
+        textarea {
+            width: 100%; padding: 15px; border-radius: 8px; font-size: 1em;
+            min-height: 250px; resize: vertical; background-color: var(--color-bg); color: var(--color-text);
+            border: 1px solid var(--color-card-border); transition: all 0.3s ease;
         }
-        .narration-time-main i, .part-header .narration-time i {
-            margin-right: 5px; 
-             font-size: 0.9em;
+        textarea:focus, textarea:focus-visible { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-shadow); }
+
+        .controls-wrapper { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+        .counters-group { display: flex; gap: 10px; }
+        .char-counter, .word-counter, .narration-time { font-size: 0.9em; background-color: var(--color-bg); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--color-card-border); }
+        .narration-time { color: var(--color-primary); }
+        
+        /* SELETOR DE MODO */
+        .mode-selector { display: flex; background-color: var(--color-bg); border-radius: 6px; padding: 3px; border: 1px solid var(--color-card-border); }
+        .mode-selector input { display: none; }
+        .mode-selector label {
+            padding: 2px 8px; border-radius: 4px; cursor: pointer; font-weight: 400; font-size: 0.75em; 
+            color: var(--color-text); opacity: 0.7; transition: all 0.3s ease;
         }
+        .mode-selector input:checked + label {
+            background-color: var(--color-primary); color: var(--color-bg); opacity: 1; box-shadow: 0 0 8px var(--color-shadow);
+        }
+        .light-theme .mode-selector input:checked + label { color: #fff; }
+
+        .limit-group { display: flex; align-items: center; gap: 10px; }
+        .limit-group label { font-weight: 400; font-size: 1em; } 
         
         input[type="number"] {
-            width: 140px; 
-            padding: 10px 15px;
-            border: 1px solid var(--input-border);
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1em;
-            font-family: 'Roboto', sans-serif;
-            transition: border-color var(--animation-duration-fast), box-shadow var(--animation-duration-fast);
-            background-color: var(--input-bg);
-            color: var(--input-text);
+            width: 80px; padding: 8px; border-radius: 6px; border: 1px solid var(--color-card-border);
+            background-color: var(--color-bg); color: var(--color-text); font-family: var(--font-main); font-size: 1em; text-align: center;
         }
-        input[type="number"]:focus {
-            outline: none;
-            border-color: var(--input-focus-border);
-            box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+
+        .main-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .main-actions button {
+            flex-grow: 1; padding: 12px; font-size: 1.1em; font-weight: 700; border-radius: 8px; border: none;
+            cursor: pointer; transition: all 0.3s ease; color: #fff;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .main-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
+        .main-actions button:hover { transform: translateY(-2px); opacity: 0.9; }
+        .main-actions .split-btn { background-color: var(--color-copy-initial); }
+        .main-actions .split-btn.splitted { background-color: var(--color-copy-copied); }
+        .main-actions .clear-btn { background: var(--color-secondary); }
+
+        #message { text-align: center; font-weight: 600; height: 24px; margin-top: 1rem; }
+        #message.success { color: var(--color-copy-copied); }
+        #message.error { color: var(--color-secondary); }
+
+        /* ---- ÁREA DE RESULTADOS ---- */
+        .part-card {
+            margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);
+            animation: fadeIn 0.5s ease-out forwards;
         }
-        .main-buttons button {
-            flex: 1;
-            padding: 14px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 700;
-            transition: background var(--animation-duration-fast) ease, transform 0.2s ease, box-shadow var(--animation-duration-fast) ease;
-            margin-top: 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        .main-buttons button i {
-            margin-right: 8px; 
-        }
-        .main-buttons button:hover {
-            transform: translateY(-3px); 
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35); 
-        }
-        .main-buttons button.split-btn {
-            background-color: #007bff; 
-            color: white;
-            background: linear-gradient(45deg, #007bff, #00bfff);
-        }
-        .main-buttons button.split-btn:hover {
-            background: linear-gradient(45deg, #0056b3, #0099e6);
-        }
-        .main-buttons button.clear-main-btn {
-            color: white;
-            background: linear-gradient(45deg, var(--btn-delete-bg-start), var(--btn-delete-bg-end));
-        }
-        .main-buttons button.clear-main-btn:hover {
-            background: linear-gradient(45deg, var(--btn-delete-hover-bg-start), var(--btn-delete-hover-bg-end));
-        }
-        #output {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid var(--part-border);
-        }
-        .part-container {
-            background-color: var(--part-bg);
-            border: 1px solid var(--part-border);
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            position: relative;
-            box-shadow: 0 0 15px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s, background-color var(--animation-duration-fast), border-color var(--animation-duration-fast);
-            animation: fadeInUp var(--animation-duration-normal) ease-out forwards;
-        }
-        .part-container:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 25px rgba(0,0,0,0.1);
-        }
-        .part-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed var(--part-header-border);
-        }
-        .part-header h3 {
-            margin: 0;
-            color: var(--text-tertiary);
-            font-size: 1.2em;
-            margin-right: auto; 
-        }
-        .part-meta { 
-            display: flex;
-            align-items: center;
-            gap: 10px; 
-        }
-        .part-header .narration-time {
-            font-size: 0.85em; 
-            color: var(--link-color); 
-            background-color: var(--counter-bg); 
-            padding: 4px 8px; 
-            border-radius: 5px;
-            border: 1px solid var(--container-border);
-            display: flex;
-            align-items: center;
-            transition: background-color var(--animation-duration-fast), color var(--animation-duration-fast), border-color var(--animation-duration-fast);
-        }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        .part-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; }
+        .part-header h3 { color: var(--color-primary); font-size: 1em; font-weight: 400; }
         
-        .part-textarea { 
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--input-border);
-            border-radius: 4px;
-            font-size: 0.95em;
-            font-family: 'Roboto', sans-serif;
-            min-height: 120px; 
-            resize: vertical;
-            box-sizing: border-box;
-            background-color: var(--input-bg);
-            color: var(--input-text);
+        .part-textarea { min-height: 150px; font-size: 1em; }
+        .part-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1rem; }
+        .part-actions button {
+            background-color: var(--color-copy-initial); color: #fff; border: none;
+            padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease;
         }
-        .part-textarea:focus {
-            outline: none;
-            border-color: var(--input-focus-border);
-            box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
-        }
-        .part-actions {
-            display: flex;
-            gap: 30px; 
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
-        .part-actions button i {
-            margin-right: 6px;
-        }
-        .part-container button.copy-btn,
-        .part-container button.clear-part-btn {
-            border-radius: 8px;
-            transition: background var(--animation-duration-fast) ease, transform 0.2s ease, box-shadow var(--animation-duration-fast) ease;
-            border: none;
-            cursor: pointer;
-            color: white;
-            padding: 8px 12px;
-            font-size: 0.9em;
-            font-weight: 600;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-        .part-container button.copy-btn { 
-            background: linear-gradient(45deg, var(--btn-part-copy-bg-start), var(--btn-part-copy-bg-end)); 
-        }
-        .part-container button.copy-btn:hover { 
-            background: linear-gradient(45deg, var(--btn-part-copy-hover-bg-start), var(--btn-part-copy-hover-bg-end)); 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        .part-container button.copy-btn.copied {  
-            background: linear-gradient(45deg, var(--btn-part-copied-feedback-bg-start), var(--btn-part-copied-feedback-bg-end)); 
-            box-shadow: 0 0 10px var(--btn-part-copied-feedback-shadow);
-        }
-        .part-container button.clear-part-btn {
-            background: linear-gradient(45deg, var(--btn-delete-bg-start), var(--btn-delete-bg-end));
-        }
-        .part-container button.clear-part-btn:hover {
-            background: linear-gradient(45deg, var(--btn-delete-hover-bg-start), var(--btn-delete-hover-bg-end));
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        #message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            display: none;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            transition: background-color var(--animation-duration-fast);
-        }
-        #message.error {
-            background-color: var(--btn-delete-bg-start); 
-            color: white;
-            border: 1px solid var(--btn-delete-hover-bg-start);
-        }
-        #message.success { 
-            background-color: var(--btn-main-copy-bg-start); 
-            color: white;
-            border: 1px solid var(--btn-main-copy-hover-bg-start);
-        }
-        .footer-text {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid var(--part-border);
-            font-size: 0.9em; 
-            color: var(--text-tertiary);
-            text-shadow: 0 0 8px rgba(176, 224, 230, 0.5);
-            line-height: 1.6; 
-        }
-        body.light-mode .footer-text {
-            text-shadow: none;
-        }
-        .footer-text span { 
-            font-size: 1.2em; 
-        }
-        .footer-link { 
-            color: var(--link-color);
-            text-decoration: none;
-            transition: color var(--animation-duration-fast) ease, text-shadow var(--animation-duration-fast) ease;
-            text-shadow: 0 0 5px var(--link-color);
-        }
-        .footer-link:hover {
-            color: var(--link-hover-color);
-            text-shadow: 0 0 10px var(--link-hover-color);
-        }
-        .credits-text {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid var(--container-border);
-            font-size: 0.85em;
-            color: var(--text-secondary);
-            text-align: center;
-        }
-        .credits-text strong {
-            color: var(--text-tertiary);
-            font-weight: 700;
-        }
+        .part-actions button:hover { opacity: 0.8; }
+        .part-actions button.copied { background-color: var(--color-copy-copied) !important; }
+
+        /* ---- RODAPÉ ---- */
+        footer { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--color-card-border); color: #888; transition: border-color 0.3s ease; }
+        .footer-wrapper { display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; }
+        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-bottom: 0.5rem; }
+        .footer-link, .donation-link, .email-link { color: var(--color-text); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s, text-shadow 0.3s; }
+        .footer-link:hover, .donation-link:hover, .email-link:hover { color: var(--color-primary); text-shadow: 0 0 8px var(--color-shadow); }
+        .footer-link:hover span, .donation-link:hover span, .email-link:hover span { text-decoration: underline; }
+        .youtube-icon { width: 28px; height: 20px; flex-shrink: 0; }
+        .donation-link svg, .email-link svg { width: 20px; height: 20px; fill: var(--color-primary); transition: fill 0.3s; }
+        .copyright-text { font-size: 0.9em; color: #888; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <button id="theme-toggle" title="Alterar Tema (Modo Claro/Escuro)">
-            <i class="fas fa-moon"></i>
-        </button>
+<body id="top">
 
-        <a href="https://www.youtube.com/@CronicasEstelaress" target="_blank" class="title-link">
-            <h1>Divisor de Texto Crônicas Estelares</h1>
-        </a>
-        <a href="https://www.youtube.com/@CronicasEstelaress" target="_blank" class="channel-link">Visite o nosso canal no YouTube! Clique aqui!</a>
-
-        <a href="https://www.youtube.com/@CronicasEstelaress" target="_blank" class="image-link">
-            <img src="https://i.imgur.com/GMiX6Rv.png" alt="Logo do Canal Crônicas Estelares" class="app-logo">
-        </a>
+    <!-- BOTÃO PARA TROCAR O TEMA -->
+    <a href="https://cronicasestelares.vercel.app/" class="floating-button back-to-portal" title="Voltar ao portal Crônicas Estelares">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
+    <div id="theme-toggle" class="floating-button theme-switcher" title="Alternar tema">
+        <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13.14C20.97,13.14 20.3,13.42 19.82,13.9C19.34,14.38 19.06,15.05 19.06,15.72C19.06,16.39 19.34,17.06 19.82,17.54C20.3,18.02 20.97,18.3 21.64,18.3C22.31,18.3 22.98,18.02 23.46,17.54C23.94,17.06 24.22,16.39 24.22,15.72C24.22,15.05 23.94,14.38 23.46,13.9C22.98,13.42 22.31,13.14 21.64,13.14Z M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22C15.93,22 19.33,19.79 20.94,16.63C17.9,17.56 14.62,16.4 12.5,13.82C10.38,11.24 10.45,7.87 12.68,5.3C11.39,4.28 9.81,3.75 8.12,4.05C5.91,4.5 4.05,6.17 3.34,8.36C2.63,10.55 3.19,12.94 4.83,14.57C6.47,16.21 8.85,16.78 11.05,16.07C11.33,16 11.62,15.95 11.9,15.9C11.53,15.33 11.25,14.68 11.09,14C10.23,10.82 11.7,7.5 14.5,5.8C15.45,5.23 16.5,4.96 17.55,5C17.84,2.92 15.15,2 12,2Z"/></svg>
+        <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5V2.5H11V4.5H12M18.6,6.5L19.8,5.3L18.4,3.9L17.2,5.1L18.6,6.5M20.5,11H22.5V12H20.5V11M17.2,18.9L18.4,20.1L19.8,18.7L18.6,17.5L17.2,18.9M12,20.5V22.5H13V20.5H12M5.4,17.5L4.2,18.7L2.8,17.3L4,16.1L5.4,17.5M3.5,12H1.5V11H3.5V12M6.8,5.1L5.6,3.9L4.2,5.3L5.4,6.5L6.8,5.1Z"/></svg>
+    </div>
+    
+    <main class="container">
+        <div class="tool-banner">
+            <a href="https://www.youtube.com/@CronicasEstelaress" target="_blank" rel="noopener noreferrer" title="Visite o canal Crônicas Estelares no YouTube">
+                <img class="tool-banner-image" src="https://raw.githubusercontent.com/marcosbernardo2802/portal/main/images/baner-app.png" alt="Banner ilustrativo da ferramenta Divisor de Texto">
+            </a>
+        </div>
         
-        <div class="horizontal-divider"></div>
-
-        <div class="form-group">
-            <div class="label-wrapper">
-                <label for="inputText">Cole seu texto aqui:</label>
-                <button id="copyMainTextButton" title="Copiar todo o texto principal para a área de transferência.">
-                    <i class="fas fa-paste"></i>Copiar Texto Principal
-                </button>
+        <div class="app-card">
+            <h2>Divisor de Texto Crônicas Estelares</h2>
+            <div class="form-group">
+                <div class="label-wrapper">
+                    <label>Seu roteiro completo:</label>
+                    <button id="copyMainButton" class="copy-main-btn" title="Copiar todo o roteiro para a área de transferência"><i class="fas fa-copy"></i> Copiar Roteiro</button>
+                </div>
+                <textarea id="inputText" placeholder="Cole aqui o seu texto para dividir em partes menores..."></textarea>
+                <div class="controls-wrapper">
+                    <div class="counters-group">
+                        <span class="char-counter" title="Total de caracteres"><i class="fas fa-keyboard"></i> <span id="mainCharCounter">0</span></span>
+                        <span class="word-counter" title="Total de palavras"><i class="fas fa-file-word"></i> <span id="mainWordCounter">0</span></span>
+                    </div>
+                    <div class="narration-time" title="Tempo de narração aproximado, varia com a voz e ferramenta TTS."><i class="fas fa-clock"></i> aprox. <span id="mainNarrationTime">0s</span></div>
+                </div>
             </div>
-            <textarea id="inputText" placeholder="Digite ou cole seu texto longo..." spellcheck="true"></textarea>
-            <div class="char-counter-wrapper">
-                <span class="narration-time-main" title="Estimativa de tempo de narração do texto principal"><i class="fas fa-clock"></i><span id="mainNarrationTimeText">0 seg</span></span>
-                <div class="char-counter generic-char-counter">Caracteres: <span id="currentTextLength">0</span></div>
+            <div class="form-group">
+                <div class="label-wrapper">
+                    <div class="mode-selector">
+                        <input type="radio" id="modeChars" name="splitMode" value="chars" checked>
+                        <label for="modeChars" title="Dividir o texto com base no número de caracteres">Caracteres</label>
+                        <input type="radio" id="modeWords" name="splitMode" value="words">
+                        <label for="modeWords" title="Dividir o texto com base no número de palavras">Palavras</label>
+                    </div>
+                    <div class="limit-group">
+                        <label for="limitInput" id="limitLabel">Caracteres por parte:</label>
+                        <input type="number" id="limitInput" value="4900" min="50" title="Defina o limite para cada parte dividida">
+                    </div>
+                </div>
             </div>
+            <div class="main-actions">
+                <button id="splitButton" class="split-btn" title="Dividir o texto com base no modo e limite selecionados"><i class="fas fa-scissors"></i>Dividir Texto</button>
+                <button id="clearButton" class="clear-btn" title="Apagar todo o texto do roteiro e os resultados"><i class="fas fa-trash-alt"></i> Apagar Tudo</button>
+            </div>
+            <div id="message"></div>
         </div>
-
-        <div class="form-group">
-            <label for="charLimit">Número máximo de caracteres por parte:</label>
-            <input type="number" id="charLimit" value="4900" min="50" step="10">
-        </div>
-
-        <div class="main-buttons">
-            <button id="splitButton" class="split-btn" title="Divide o texto principal em partes menores com base no limite de caracteres."><i class="fas fa-scissors"></i>Dividir Texto</button>
-            <button id="clearMainTextButton" class="clear-main-btn" title="Limpa o campo de texto principal e todas as partes já divididas."><i class="fas fa-trash-alt"></i>Apagar Texto Principal</button>
-        </div>
-
-        <div id="message" class="hidden"></div>
 
         <div id="output"></div>
+    </main>
 
-        <div class="footer-text">
-            <span>✨</span> De criador dark para criador dark: uma ferramenta gratuita para facilitar suas narrações TTS. <br>
-            Gostou? Apoie nossa base estelar com sua inscrição e views nos vídeos. Juntos, fortalecemos a criação de conteúdo anônimo e de qualidade! <span>🌠</span>
-            <br>
-            <br> 
-            <a href="https://www.youtube.com/@CronicasEstelaress" target="_blank" class="footer-link">Clique aqui para ir ao canal!</a> <span>🛸</span>
-            
-            <p class="credits-text">
-                <span>🛠️</span> Aplicativo desenvolvido pelo <strong>Comandante Marcos/Crônicas Estelares</strong> com auxílio da IA Gemini da Google. <span>💡</span>
-            </p>
+    <!-- RODAPÉ -->
+    <footer>
+        <div class="container footer-wrapper">
+            <div class="footer-links">
+                <a href="https://www.youtube.com/@CronicasEstelaress" target="_blank" rel="noopener noreferrer" class="footer-link">
+                    <svg class="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="4" fill="#FF0000"/><path d="M11,14 L18,10 L11,6 V14 Z" fill="#FFFFFF"/></svg>
+                    <span>Acesse nosso canal no YouTube</span>
+                </a>
+                <a href="https://page-doacao.vercel.app/" target="_blank" rel="noopener noreferrer" class="donation-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <span>Apoie este projeto</span>
+                </a>
+                <a href="mailto:cronicasestelares.oficial@gmail.com" target="_blank" rel="noopener noreferrer" class="email-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    <span>cronicasestelares.oficial@gmail.com</span>
+                </a>
+            </div>
+            <p class="copyright-text">&copy; <span id="current-year"></span> Crônicas Estelares. Todos os sistemas operacionais.</p>
         </div>
-    </div>
+    </footer>
+    
+    <a id="back-to-top-btn" class="floating-button back-to-top" title="Voltar ao topo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+    </a>
 
     <script>
-        const inputTextElem = document.getElementById('inputText');
-        const charLimitElem = document.getElementById('charLimit');
-        const splitButton = document.getElementById('splitButton');
-        const clearMainTextButton = document.getElementById('clearMainTextButton');
-        const outputDiv = document.getElementById('output');
-        const currentTextLengthSpan = document.getElementById('currentTextLength');
-        const mainNarrationTimeTextSpan = document.getElementById('mainNarrationTimeText'); 
-        const messageDiv = document.getElementById('message');
-        const themeToggleButton = document.getElementById('theme-toggle');
-        const themeIcon = themeToggleButton.querySelector('i');
-        const copyMainTextButton = document.getElementById('copyMainTextButton');
-        const localStorageKey = 'savedTextCrônicasEstelares'; 
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ELEMENTOS DO DOM ---
+            const inputTextElem = document.getElementById('inputText');
+            const limitInput = document.getElementById('limitInput');
+            const limitLabel = document.getElementById('limitLabel');
+            const splitButton = document.getElementById('splitButton');
+            const clearButton = document.getElementById('clearButton');
+            const outputDiv = document.getElementById('output');
+            const mainCharCounter = document.getElementById('mainCharCounter');
+            const mainWordCounter = document.getElementById('mainWordCounter');
+            const mainNarrationTime = document.getElementById('mainNarrationTime');
+            const messageDiv = document.getElementById('message');
+            const themeToggleButton = document.getElementById('theme-toggle');
+            const backToTopButton = document.getElementById("back-to-top-btn");
+            const yearElement = document.getElementById('current-year');
+            const copyMainButton = document.getElementById('copyMainButton');
+            const modeRadios = document.querySelectorAll('input[name="splitMode"]');
+            const localStorageKey = 'divisorTextoSalvo';
 
-        // --- INÍCIO: Lógica de Tema ---
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme) {
-            document.body.classList.add(currentTheme);
-            if (currentTheme === 'light-mode') {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            }
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-            document.body.classList.add('light-mode');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-            localStorage.setItem('theme', 'light-mode'); 
-        } else {
-            localStorage.setItem('theme', 'dark-mode');
-        }
-
-        themeToggleButton.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            let theme = 'dark-mode';
-            if (document.body.classList.contains('light-mode')) {
-                theme = 'light-mode';
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-            localStorage.setItem('theme', theme);
-        });
-        // --- FIM: Lógica de Tema ---
-
-        // --- INÍCIO: Função para calcular e formatar tempo de narração ---
-        function formatNarrationTime(characterCount) {
-            if (characterCount === 0) return "0 seg";
-            const narrationTimeInMinutes = characterCount / 1000;
-            const totalNarrationSeconds = Math.round(narrationTimeInMinutes * 60);
+            // --- INICIALIZAÇÃO ---
+            if (yearElement) yearElement.textContent = new Date().getFullYear();
             
-            if (totalNarrationSeconds < 1 && characterCount > 0) { 
-                return "< 1 seg";
-            } else if (totalNarrationSeconds === 0 && characterCount === 0) {
-                 return "0 seg";
-            } else if (totalNarrationSeconds < 60) {
-                return `${totalNarrationSeconds} seg`;
-            } else {
-                const minutes = Math.floor(totalNarrationSeconds / 60);
-                const seconds = totalNarrationSeconds % 60;
-                if (seconds === 0) {
-                    return `${minutes} min`;
+            const applyInitialTheme = () => {
+                const storedTheme = localStorage.getItem('theme');
+                if (storedTheme) {
+                    document.body.classList.toggle('light-theme', storedTheme === 'light');
                 } else {
-                    return `${minutes} min ${seconds} seg`;
+                    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+                    document.body.classList.toggle('light-theme', prefersLight);
                 }
-            }
-        }
+            };
+            applyInitialTheme();
 
-        function updateMainNarrationTime(text) {
-            const timeString = formatNarrationTime(text.length);
-            mainNarrationTimeTextSpan.textContent = ` aprox. ${timeString}`; 
-        }
-        // --- FIM: Função para calcular e formatar tempo de narração ---
-
-
-        // --- INÍCIO: Lógica para Salvar/Carregar Texto Principal do LocalStorage ---
-        const savedText = localStorage.getItem(localStorageKey);
-        if (savedText) {
-            inputTextElem.value = savedText;
-            currentTextLengthSpan.textContent = inputTextElem.value.length; 
-            updateMainNarrationTime(inputTextElem.value); 
-        } else {
-            updateMainNarrationTime(""); 
-        }
-
-        inputTextElem.addEventListener('input', () => {
-            localStorage.setItem(localStorageKey, inputTextElem.value);
-            currentTextLengthSpan.textContent = inputTextElem.value.length; 
-            updateMainNarrationTime(inputTextElem.value); 
-        });
-        // --- FIM: Lógica para Salvar/Carregar Texto Principal do LocalStorage ---
-
-
-        // --- INÍCIO: Lógica do Botão Copiar Texto Principal ---
-        copyMainTextButton.addEventListener('click', async () => {
-            const textToCopy = inputTextElem.value;
-            if (textToCopy.length === 0) {
-                showMessage('Não há texto para copiar.', 'error');
-                return;
+            const savedText = localStorage.getItem(localStorageKey);
+            if (savedText) {
+                inputTextElem.value = savedText;
+                updateCounters(savedText);
             }
 
-            let copiedSuccessfully = false;
-            const originalButtonText = copyMainTextButton.innerHTML; 
-
-            try {
-                await navigator.clipboard.writeText(textToCopy);
-                copiedSuccessfully = true;
-            } catch (err) {
-                try {
-                    const tempTextarea = document.createElement('textarea');
-                    tempTextarea.value = textToCopy;
-                    tempTextarea.style.position = 'fixed'; 
-                    tempTextarea.style.left = '-9999px'; 
-                    document.body.appendChild(tempTextarea);
-                    tempTextarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(tempTextarea);
-                    copiedSuccessfully = true;
-                } catch (execCommandErr) {
-                    showMessage('Falha ao copiar o texto automaticamente. Por favor, copie manualmente.', 'error');
-                }
+            // --- FUNÇÕES ---
+            function showMessage(msg, type = 'success') {
+                messageDiv.textContent = msg;
+                messageDiv.className = type;
+                setTimeout(() => { messageDiv.textContent = ''; }, 3000);
             }
 
-            if (copiedSuccessfully) {
-                copyMainTextButton.innerHTML = '<i class="fas fa-check"></i>Copiado!';
-                copyMainTextButton.classList.add('copied');
-                showMessage('Texto principal copiado!', 'success');
-                inputTextElem.select(); 
-                inputTextElem.setSelectionRange(0, inputTextElem.value.length); 
-
-                setTimeout(() => {
-                    copyMainTextButton.innerHTML = originalButtonText; 
-                    copyMainTextButton.classList.remove('copied');
-                }, 2000); 
-            }
-        });
-        // --- FIM: Lógica do Botão Copiar Texto Principal ---
-
-        charLimitElem.value = 4900; 
-
-        splitButton.addEventListener('click', splitText);
-
-        clearMainTextButton.addEventListener('click', () => {
-            inputTextElem.value = '';
-            currentTextLengthSpan.textContent = '0';
-            outputDiv.innerHTML = ''; 
-            localStorage.removeItem(localStorageKey); 
-            updateMainNarrationTime(""); 
-            showMessage('Texto principal e partes divididas apagados!', 'success');
-        });
-
-        function showMessage(msg, type) {
-            messageDiv.textContent = msg;
-            messageDiv.className = '';
-            messageDiv.classList.add(type); 
-            messageDiv.style.display = 'block';
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 3000); 
-        }
-
-        function splitText() {
-            const inputText = inputTextElem.value.trim(); 
-            const charLimit = parseInt(charLimitElem.value, 10);
-            outputDiv.innerHTML = '';
-            messageDiv.style.display = 'none';
-
-            if (inputText.length === 0) {
-                showMessage('Por favor, digite ou cole algum texto para dividir.', 'error');
-                return;
-            }
-            if (isNaN(charLimit) || charLimit <= 0) {
-                showMessage('Por favor, insira um número válido e positivo para o limite de caracteres.', 'error');
-                return;
-            }
-            if (charLimit < 50) { 
-                showMessage('O limite mínimo de caracteres é 50 para uma melhor divisão.', 'error');
-                return;
+            function formatNarrationTime(charCount) {
+                if (charCount === 0) return "0s";
+                const totalSeconds = Math.round((charCount / 1000) * 60);
+                if (totalSeconds < 60) return `${totalSeconds}s`;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                return seconds === 0 ? `${minutes}m` : `${minutes}m ${seconds}s`;
             }
 
-            let startIndex = 0;
-            let partNumber = 1;
-
-            while (startIndex < inputText.length) {
-                let endIndex = Math.min(startIndex + charLimit, inputText.length);
-                if (endIndex < inputText.length && (endIndex - startIndex) > 0) {
-                    let currentChunk = inputText.substring(startIndex, endIndex);
-                    let lastSentenceEndIndex = -1;
-                    for (let i = currentChunk.length - 1; i >= 0; i--) {
-                        if (currentChunk[i] === '.' || currentChunk[i] === '?' || currentChunk[i] === '!') {
-                            lastSentenceEndIndex = i;
-                            break; 
-                        }
-                    }
-                    if (lastSentenceEndIndex !== -1 && lastSentenceEndIndex > 0) {
-                        endIndex = startIndex + lastSentenceEndIndex + 1;
+            function updateCounters(text) {
+                const words = text.trim().split(/\s+/).filter(Boolean);
+                mainCharCounter.textContent = text.length;
+                mainWordCounter.textContent = text.length > 0 ? words.length : 0;
+                mainNarrationTime.textContent = formatNarrationTime(text.length);
+            }
+            
+            function resetCopyButtons() {
+                document.querySelectorAll('.copied').forEach(activeButton => {
+                    activeButton.classList.remove('copied');
+                    if (activeButton.id === 'copyMainButton') {
+                        activeButton.innerHTML = '<i class="fas fa-copy"></i> Copiar Roteiro';
                     } else {
-                        if (inputText[endIndex] !== ' ' && currentChunk.includes(' ')) {
-                            let lastSpaceIndexInChunk = currentChunk.lastIndexOf(' ');
-                            if (lastSpaceIndexInChunk > 0) {
-                                endIndex = startIndex + lastSpaceIndexInChunk;
-                            }
-                        }
+                        activeButton.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+                    }
+                });
+            }
+
+            async function copyToClipboard(text, button, textareaToSelect) {
+                resetCopyButtons();
+                let success = false;
+                try {
+                    await navigator.clipboard.writeText(text);
+                    success = true;
+                } catch (err) {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    textArea.style.position = "fixed"; textArea.style.top = "-9999px"; textArea.style.left = "-9999px";
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        success = true;
+                    } catch (execErr) {
+                        showMessage('Falha ao copiar. Tente manualmente.', 'error');
+                    } finally {
+                        document.body.removeChild(textArea);
                     }
                 }
-                
-                let partText = inputText.substring(startIndex, endIndex); 
-                
-                if (partText.trim().length === 0 && endIndex < inputText.length) { 
-                    startIndex = endIndex; 
-                    continue;
+                if (success) {
+                    button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                    button.classList.add('copied');
+                    showMessage('Texto copiado com sucesso!', 'success');
+                    if (textareaToSelect) textareaToSelect.select();
                 }
-                if (partText.trim().length === 0 && endIndex >= inputText.length) {
-                    break;
+            }
+            
+            function updateMode() {
+                const selectedMode = document.querySelector('input[name="splitMode"]:checked').value;
+                if (selectedMode === 'chars') {
+                    limitLabel.textContent = 'Caracteres por parte:';
+                    limitInput.value = 4900;
+                    limitInput.min = 50;
+                    limitInput.step = 100;
+                } else {
+                    limitLabel.textContent = 'Palavras por parte:';
+                    limitInput.value = 800;
+                    limitInput.min = 10;
+                    limitInput.step = 10;
                 }
+            }
+            
+            function resetSplitButton() {
+                splitButton.classList.remove('splitted');
+                splitButton.innerHTML = '<i class="fas fa-scissors"></i>Dividir Texto';
+            }
 
-                const partContainer = document.createElement('div');
-                partContainer.classList.add('part-container');
+            function splitText() {
+                const inputText = inputTextElem.value.trim();
+                const limit = parseInt(limitInput.value, 10);
+                const mode = document.querySelector('input[name="splitMode"]:checked').value;
+                outputDiv.innerHTML = '';
                 
-                const partHeader = document.createElement('div');
-                partHeader.classList.add('part-header');
-                
-                const partTitle = document.createElement('h3');
-                partTitle.textContent = `Parte ${partNumber}`;
-                
-                const partMetaDiv = document.createElement('div'); 
-                partMetaDiv.classList.add('part-meta');
+                if (!inputText) return showMessage('Por favor, insira um texto para dividir.', 'error');
+                if (isNaN(limit) || limit <= 0) return showMessage('O limite deve ser um número positivo.', 'error');
 
-                const charCountSpan = document.createElement('span');
-                charCountSpan.classList.add('generic-char-counter'); 
-                charCountSpan.textContent = `${partText.length} caracteres`; 
+                if (mode === 'chars') {
+                    splitByChars(inputText, limit);
+                } else {
+                    splitByWords(inputText, limit);
+                }
                 
-                const narrationTimeSpan = document.createElement('span');
-                narrationTimeSpan.classList.add('narration-time'); 
-                const displayNarrationTime = formatNarrationTime(partText.length);
-                narrationTimeSpan.innerHTML = `<i class="fas fa-clock"></i> aprox. ${displayNarrationTime}`;
-                narrationTimeSpan.title = `Estimativa de tempo de narração (${partText.length} caracteres a 1000/minuto)`;
+                if (outputDiv.children.length > 0) {
+                    showMessage('Texto dividido com sucesso!', 'success');
+                    splitButton.classList.add('splitted');
+                    splitButton.innerHTML = '<i class="fas fa-check"></i> Texto Dividido';
+                }
+            }
+
+            function splitByChars(text, charLimit) {
+                let startIndex = 0;
+                let partNumber = 1;
+                while (startIndex < text.length) {
+                    let endIndex = Math.min(startIndex + charLimit, text.length);
+                    if (endIndex < text.length) {
+                        let lastSpace = text.lastIndexOf(' ', endIndex);
+                        if (lastSpace > startIndex) endIndex = lastSpace;
+                    }
+                    const partText = text.substring(startIndex, endIndex).trim();
+                    if (partText) createPartCard(partText, partNumber++);
+                    startIndex = endIndex;
+                }
+            }
+            
+            function splitByWords(text, wordLimit) {
+                const words = text.split(/\s+/).filter(Boolean);
+                let partNumber = 1;
+                for (let i = 0; i < words.length; i += wordLimit) {
+                    const chunk = words.slice(i, i + wordLimit);
+                    const partText = chunk.join(' ');
+                    if (partText) createPartCard(partText, partNumber++);
+                }
+            }
+            
+            function createPartCard(text, number) {
+                const card = document.createElement('div');
+                card.className = 'app-card part-card';
+                const partTextarea = document.createElement('textarea');
+                partTextarea.className = 'part-textarea';
+                partTextarea.value = text; // Editable
                 
-                const partTextarea = document.createElement('textarea'); 
-                partTextarea.classList.add('part-textarea');
-                partTextarea.value = partText; 
-                partTextarea.setAttribute('spellcheck', 'true'); 
-                const partActionsDiv = document.createElement('div');
-                partActionsDiv.classList.add('part-actions');
+                const countersDiv = document.createElement('div');
+                countersDiv.className = 'counters-group';
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'narration-time';
+                timeSpan.title = 'Tempo de narração aproximado, varia com a voz e ferramenta TTS.';
+                
+                const charSpan = document.createElement('span');
+                charSpan.className = 'char-counter';
+                charSpan.title = 'Total de caracteres';
+                
+                const wordSpan = document.createElement('span');
+                wordSpan.className = 'word-counter';
+                wordSpan.title = 'Total de palavras';
+                
+                const updatePartCounters = (currentText) => {
+                    const words = currentText.trim().split(/\s+/).filter(Boolean);
+                    timeSpan.innerHTML = `<i class="fas fa-clock"></i> aprox. ${formatNarrationTime(currentText.length)}`;
+                    charSpan.innerHTML = `<i class="fas fa-keyboard"></i> ${currentText.length}`;
+                    wordSpan.innerHTML = `<i class="fas fa-file-word"></i> ${words.length}`;
+                };
+
+                partTextarea.addEventListener('input', () => updatePartCounters(partTextarea.value));
+                updatePartCounters(text); // Initial count
+
+                countersDiv.append(timeSpan, charSpan, wordSpan);
+
+                card.innerHTML = `<div class="part-header"><h3>Parte ${number}</h3></div>`;
+                card.querySelector('.part-header').appendChild(countersDiv);
+                card.appendChild(partTextarea);
+                
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'part-actions';
                 
                 const copyButton = document.createElement('button');
-                copyButton.classList.add('copy-btn');
-                const originalCopyButtonHTML = '<i class="fas fa-copy"></i>Copiar'; 
-                copyButton.innerHTML = originalCopyButtonHTML;
-                copyButton.title = "Copiar o texto desta parte para a área de transferência.";
-                
-                const clearPartButton = document.createElement('button');
-                clearPartButton.classList.add('clear-part-btn');
-                clearPartButton.innerHTML = '<i class="fas fa-trash-alt"></i>Apagar Parte';
-                clearPartButton.title = "Remove esta parte específica.";
-
-                partTextarea.addEventListener('input', (e) => {
-                    charCountSpan.textContent = `${e.target.value.length} caracteres`;
-                    const newDisplayTime = formatNarrationTime(e.target.value.length);
-                    narrationTimeSpan.innerHTML = `<i class="fas fa-clock"></i> aprox. ${newDisplayTime}`;
-                    narrationTimeSpan.title = `Estimativa de tempo de narração (${e.target.value.length} caracteres a 1000/minuto)`;
-                    copyButton.dataset.textToCopy = e.target.value;
-                });
-                copyButton.dataset.textToCopy = partText;
-
-                copyButton.addEventListener('click', async (event) => {
-                    const currentClickedButton = event.currentTarget;
-                    // Limpa o estado 'copied' de TODOS os botões de copiar (principal e partes)
-                    document.querySelectorAll('.copy-btn.copied, #copyMainTextButton.copied').forEach(btn => {
-                         if (btn.id === 'copyMainTextButton') {
-                            btn.innerHTML = '<i class="fas fa-paste"></i>Copiar Texto Principal';
-                        } else {
-                            btn.innerHTML = '<i class="fas fa-copy"></i>Copiar';
-                        }
-                        btn.classList.remove('copied');
-                    });
-
-                    const textToCopy = currentClickedButton.dataset.textToCopy;
-                    let copiedSuccessfully = false;
-                    try {
-                        await navigator.clipboard.writeText(textToCopy);
-                        copiedSuccessfully = true;
-                    } catch (err) {
-                        try {
-                            const tempTextarea = document.createElement('textarea');
-                            tempTextarea.value = textToCopy;
-                            tempTextarea.style.position = 'fixed'; 
-                            tempTextarea.style.left = '-9999px'; 
-                            document.body.appendChild(tempTextarea);
-                            tempTextarea.select();
-                            document.execCommand('copy');
-                            document.body.removeChild(tempTextarea);
-                            copiedSuccessfully = true;
-                        } catch (execCommandErr) {
-                            showMessage('Falha ao copiar o texto automaticamente. Por favor, copie manualmente.', 'error');
-                        }
-                    }
-                    if (copiedSuccessfully) {
-                        currentClickedButton.innerHTML = '<i class="fas fa-check"></i>Copiado!';
-                        currentClickedButton.classList.add('copied');
-                        
-                        const associatedTextarea = currentClickedButton.closest('.part-container').querySelector('.part-textarea');
-                        if (associatedTextarea) {
-                            associatedTextarea.select();
-                            associatedTextarea.setSelectionRange(0, associatedTextarea.value.length); 
-                        }
-                        // O setTimeout foi removido conforme solicitado
-                    }
-                });
-                clearPartButton.addEventListener('click', () => {
-                    partContainer.remove(); 
-                    showMessage('Parte apagada!', 'success');
+                copyButton.className = 'copy-part-btn';
+                copyButton.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+                copyButton.title = "Copiar o texto desta parte";
+                copyButton.addEventListener('click', (e) => {
+                    copyToClipboard(partTextarea.value, e.currentTarget, partTextarea);
                 });
                 
-                partHeader.appendChild(partTitle);
-                partMetaDiv.appendChild(charCountSpan);
-                partMetaDiv.appendChild(narrationTimeSpan); 
-                partHeader.appendChild(partMetaDiv); 
+                actionsDiv.appendChild(copyButton);
+                card.appendChild(actionsDiv);
+                outputDiv.appendChild(card);
+            }
 
-                partContainer.appendChild(partHeader);
-                partContainer.appendChild(partTextarea);
-                partActionsDiv.appendChild(copyButton);
-                partActionsDiv.appendChild(clearPartButton);
-                partContainer.appendChild(partActionsDiv);
-                outputDiv.appendChild(partContainer);
-                startIndex = endIndex;
-                partNumber++;
+            // --- EVENT LISTENERS ---
+            themeToggleButton.addEventListener('click', () => {
+                const isLight = document.body.classList.toggle('light-theme');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            });
+            
+            window.addEventListener("scroll", () => {
+                if (backToTopButton) {
+                    backToTopButton.classList.toggle("show", window.scrollY > 300);
+                }
+            });
+
+            if (backToTopButton) {
+                backToTopButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
             }
-            if (outputDiv.children.length > 0) {
-                showMessage('Texto dividido com sucesso!', 'success');
-            } else if (inputText.length > 0) {
-                showMessage('Nenhuma parte gerada. O texto pode ser muito curto ou o limite de caracteres precisa de ajuste.', 'error');
-            }
-        }
+
+            inputTextElem.addEventListener('input', (event) => {
+                updateCounters(event.target.value);
+                localStorage.setItem(localStorageKey, event.target.value);
+                resetSplitButton();
+            });
+
+            modeRadios.forEach(radio => radio.addEventListener('change', updateMode));
+            splitButton.addEventListener('click', splitText);
+            clearButton.addEventListener('click', () => {
+                inputTextElem.value = '';
+                outputDiv.innerHTML = '';
+                localStorage.removeItem(localStorageKey);
+                updateCounters('');
+                showMessage('Tudo apagado!');
+                resetSplitButton();
+            });
+            
+            copyMainButton.addEventListener('click', () => {
+                if (!inputTextElem.value) return showMessage('Não há roteiro para copiar.', 'error');
+                copyToClipboard(inputTextElem.value, copyMainButton, inputTextElem);
+            });
+        });
     </script>
 </body>
 </html>
