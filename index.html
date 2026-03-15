@@ -2,10 +2,9 @@
 <html lang="pt-br">
 <head>
     <script>
-    // CÓDIGO CAMALEÃO v3.0: Escuta e Responde a Nave-Mãe
+    // CÓDIGO CAMALEÃO v4.0 (Ajuste Anti-Loop e Ocultação Total)
     window.addEventListener('message', function(event) {
         if (event.data) {
-            
             // 1. Camuflagem de Cores
             if (event.data.action === 'setTheme') {
                 const theme = event.data.theme;
@@ -18,36 +17,39 @@
                 }
             }
 
-            // 2. Modo Módulo Embutido + Ajuste de Altura Dinâmico
+            // 2. Modo Módulo Embutido (Ocultar e Ajustar Altura)
             if (event.data.isPortal === true) {
-                
-                // Oculta os cabeçalhos, rodapés e banners
-                const elementosParaOcultar = document.querySelectorAll('header, footer, .banner, .footer-links');
+                // Oculta banners, rodapés e botões flutuantes específicos das suas ferramentas
+                const elementosParaOcultar = document.querySelectorAll('header, footer, .banner, .footer-links, .theme-switcher, .back-to-top, #theme-toggle');
                 elementosParaOcultar.forEach(function(el) { el.style.display = 'none'; });
 
-                // Tira os paddings da tag <main>
+                // Ajusta o padding principal
                 const areaPrincipal = document.querySelector('main');
                 if (areaPrincipal) {
                     areaPrincipal.style.paddingTop = '1rem';
                     areaPrincipal.style.marginTop = '0';
                 }
 
-                // 3. Informa a altura correta para a Nave-Mãe
+                // Remove a barra de rolagem interna do iframe (deixa apenas a do Portal)
+                document.documentElement.style.overflowY = 'hidden';
+                document.body.style.overflowY = 'hidden';
+
+                // 3. Ajuste de Altura Dinâmico Anti-Loop
+                let ultimaAltura = 0;
                 function informarAltura() {
-                    const alturaCorreta = Math.max(
-                        document.body.scrollHeight, 
-                        document.documentElement.scrollHeight
-                    );
-                    window.parent.postMessage({ action: 'resizeIframe', height: alturaCorreta }, '*');
+                    const alturaAtual = document.body.scrollHeight;
+                    // Só avisa a Nave-Mãe se a altura realmente mudar
+                    if (alturaAtual !== ultimaAltura && alturaAtual > 0) {
+                        ultimaAltura = alturaAtual;
+                        window.parent.postMessage({ action: 'resizeIframe', height: alturaAtual }, '*');
+                    }
                 }
 
-                // Dispara o cálculo de altura logo de cara
                 informarAltura();
 
-                // Fica "espiando" a tela: se o utilizador abrir um menu, ele manda a nova altura na hora!
-                if (window.ResizeObserver) {
-                    new ResizeObserver(informarAltura).observe(document.body);
-                }
+                // Observa mudanças no conteúdo do app para redimensionar (mais seguro que ResizeObserver)
+                const observer = new MutationObserver(informarAltura);
+                observer.observe(document.body, { childList: true, subtree: true, attributes: true });
             }
         }
     });
