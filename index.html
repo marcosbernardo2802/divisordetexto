@@ -3,11 +3,11 @@
 <head>
     <!-- ================= INÍCIO DO CÓDIGO CAMALEÃO ================= -->
 <script>
-    // CÓDIGO CAMALEÃO v5.0 (Ocultação Agressiva e Anti-Loop)
+    // CÓDIGO CAMALEÃO v6.0 (Caçada Implacável ao Botão Home)
     window.addEventListener('message', function(event) {
         if (event.data) {
             
-            // 1. Camuflagem de Cores (Ajusta o tema Claro/Escuro)
+            // 1. Camuflagem de Cores
             if (event.data.action === 'setTheme') {
                 const theme = event.data.theme;
                 if (theme === 'light') {
@@ -19,53 +19,56 @@
                 }
             }
 
-            // 2. Modo Módulo Embutido (Ocultar TUDO o que for externo ao App)
+            // 2. Modo Módulo Embutido
             if (event.data.isPortal === true) {
                 
-                // Seletores agressivos para matar o Banner, Botão Home e Menus soltos
+                // ATAQUE 1: Ocultação por seletores de CSS (agora com links absolutos e classes "home")
                 const seletores = [
-                    'header', 
-                    'footer', 
-                    '.banner', 
-                    '[class*="banner"]', // Pega qualquer classe que contenha a palavra "banner"
-                    '.footer-links', 
-                    '.theme-switcher', 
-                    '#theme-toggle',
-                    '.back-to-top',
-                    'nav', // Oculta barras de navegação inteiras
-                    'a[href="/"]', // Oculta links que voltem para a raiz
-                    'a[href="index.html"]' // Oculta links que voltem para o index
+                    'header', 'footer', '.banner', '[class*="banner"]', 
+                    '.footer-links', '.theme-switcher', '#theme-toggle', '.back-to-top', 'nav',
+                    'a[href="/"]', 'a[href="index.html"]', 
+                    'a[href*="cronicasestelares"]', // Caça hiperligações absolutas do portal
+                    '[class*="home"]', '#home' // Caça qualquer classe ou ID que tenha "home" no nome
                 ].join(', ');
 
-                // Esconde todos os elementos encontrados
-                const elementosParaOcultar = document.querySelectorAll(seletores);
-                elementosParaOcultar.forEach(function(el) { 
+                document.querySelectorAll(seletores).forEach(function(el) { 
                     el.style.display = 'none'; 
                 });
 
-                // Tira os paddings e margens do topo da tag <main>
+                // ATAQUE 2: Ocultação por "Caçador de Palavras" (Busca implacável)
+                // Varre todos os botões e links à procura das palavras proibidas
+                const elementosClicaveis = document.querySelectorAll('a, button');
+                elementosClicaveis.forEach(function(el) {
+                    const texto = el.textContent.toLowerCase().trim();
+                    const link = el.href ? el.href.toLowerCase() : '';
+                    
+                    // Se o botão disser "home", "início", "voltar" ou apontar para o portal... ele desaparece!
+                    if (texto === 'home' || texto === 'início' || texto === 'inicio' || texto === 'voltar ao portal' || link.includes('cronicasestelares.vercel.app')) {
+                        el.style.display = 'none';
+                    }
+                });
+
+                // Limpeza da área de trabalho
                 const areaPrincipal = document.querySelector('main');
                 if (areaPrincipal) {
                     areaPrincipal.style.paddingTop = '1rem';
                     areaPrincipal.style.marginTop = '0';
                 }
 
-                // Trava a barra de rolagem dupla (deixa apenas a rolagem do Portal)
+                // Trava a barra de rolagem dupla
                 document.documentElement.style.overflowY = 'hidden';
                 document.body.style.overflowY = 'hidden';
 
-                // 3. Ajuste de Altura Anti-Loop (Informa ao Portal o tamanho exato do App)
+                // 3. Ajuste de Altura Anti-Loop
                 let ultimaAltura = 0;
                 function informarAltura() {
                     const alturaAtual = document.body.scrollHeight;
-                    // Só avisa a Nave-Mãe se a altura realmente mudar e for maior que 0
                     if (alturaAtual !== ultimaAltura && alturaAtual > 0) {
                         ultimaAltura = alturaAtual;
                         window.parent.postMessage({ action: 'resizeIframe', height: alturaAtual }, '*');
                     }
                 }
 
-                // Executa a primeira vez e fica observando mudanças futuras no App
                 informarAltura();
                 const observer = new MutationObserver(informarAltura);
                 observer.observe(document.body, { childList: true, subtree: true, attributes: true });
