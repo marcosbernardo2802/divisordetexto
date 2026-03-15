@@ -3,7 +3,7 @@
 <head>
     <!-- ================= INÍCIO DO CÓDIGO CAMALEÃO ================= -->
 <script>
-    // CÓDIGO CAMALEÃO v6.0 (Caçada Implacável ao Botão Home)
+    // CÓDIGO CAMALEÃO v7.0 (Ocultação de Títulos)
     window.addEventListener('message', function(event) {
         if (event.data) {
             
@@ -22,27 +22,25 @@
             // 2. Modo Módulo Embutido
             if (event.data.isPortal === true) {
                 
-                // ATAQUE 1: Ocultação por seletores de CSS (agora com links absolutos e classes "home")
+                // ATAQUE 1: Ocultação por seletores (Adicionado h1 e classes de título)
                 const seletores = [
                     'header', 'footer', '.banner', '[class*="banner"]', 
                     '.footer-links', '.theme-switcher', '#theme-toggle', '.back-to-top', 'nav',
                     'a[href="/"]', 'a[href="index.html"]', 
-                    'a[href*="cronicasestelares"]', // Caça hiperligações absolutas do portal
-                    '[class*="home"]', '#home' // Caça qualquer classe ou ID que tenha "home" no nome
+                    'a[href*="cronicasestelares"]', 
+                    '[class*="home"]', '#home',
+                    'h1', '.title', '.page-title', '#title', '[class*="titulo"]' // <-- Caçadores de Título
                 ].join(', ');
 
                 document.querySelectorAll(seletores).forEach(function(el) { 
                     el.style.display = 'none'; 
                 });
 
-                // ATAQUE 2: Ocultação por "Caçador de Palavras" (Busca implacável)
-                // Varre todos os botões e links à procura das palavras proibidas
+                // ATAQUE 2: Ocultação por "Caçador de Palavras"
                 const elementosClicaveis = document.querySelectorAll('a, button');
                 elementosClicaveis.forEach(function(el) {
                     const texto = el.textContent.toLowerCase().trim();
                     const link = el.href ? el.href.toLowerCase() : '';
-                    
-                    // Se o botão disser "home", "início", "voltar" ou apontar para o portal... ele desaparece!
                     if (texto === 'home' || texto === 'início' || texto === 'inicio' || texto === 'voltar ao portal' || link.includes('cronicasestelares.vercel.app')) {
                         el.style.display = 'none';
                     }
@@ -51,7 +49,7 @@
                 // Limpeza da área de trabalho
                 const areaPrincipal = document.querySelector('main');
                 if (areaPrincipal) {
-                    areaPrincipal.style.paddingTop = '1rem';
+                    areaPrincipal.style.paddingTop = '0.5rem'; // Reduzido ainda mais o espaço no topo
                     areaPrincipal.style.marginTop = '0';
                 }
 
