@@ -2,11 +2,11 @@
 <html lang="pt-br">
 <head>
     <script>
-    // CÓDIGO CAMALEÃO v2.0: Escuta os sinais da Nave-Mãe
+    // CÓDIGO CAMALEÃO v3.0: Escuta e Responde a Nave-Mãe
     window.addEventListener('message', function(event) {
         if (event.data) {
             
-            // 1. Camuflagem de Cores (Dark/Light Mode)
+            // 1. Camuflagem de Cores
             if (event.data.action === 'setTheme') {
                 const theme = event.data.theme;
                 if (theme === 'light') {
@@ -18,22 +18,35 @@
                 }
             }
 
-            // 2. Modo Módulo Embutido (Ocultar elementos externos)
+            // 2. Modo Módulo Embutido + Ajuste de Altura Dinâmico
             if (event.data.isPortal === true) {
-                // Adiciona uma classe ao body caso queira fazer ajustes finos no CSS do app
-                document.body.classList.add('modo-portal-ativo');
                 
-                // Oculta diretamente via JavaScript os cabeçalhos, rodapés e banners
+                // Oculta os cabeçalhos, rodapés e banners
                 const elementosParaOcultar = document.querySelectorAll('header, footer, .banner, .footer-links');
-                elementosParaOcultar.forEach(function(elemento) {
-                    elemento.style.display = 'none';
-                });
+                elementosParaOcultar.forEach(function(el) { el.style.display = 'none'; });
 
-                // Tira os paddings gigantes (se houver) da tag <main> para colar a ferramenta no topo
+                // Tira os paddings da tag <main>
                 const areaPrincipal = document.querySelector('main');
                 if (areaPrincipal) {
                     areaPrincipal.style.paddingTop = '1rem';
                     areaPrincipal.style.marginTop = '0';
+                }
+
+                // 3. Informa a altura correta para a Nave-Mãe
+                function informarAltura() {
+                    const alturaCorreta = Math.max(
+                        document.body.scrollHeight, 
+                        document.documentElement.scrollHeight
+                    );
+                    window.parent.postMessage({ action: 'resizeIframe', height: alturaCorreta }, '*');
+                }
+
+                // Dispara o cálculo de altura logo de cara
+                informarAltura();
+
+                // Fica "espiando" a tela: se o utilizador abrir um menu, ele manda a nova altura na hora!
+                if (window.ResizeObserver) {
+                    new ResizeObserver(informarAltura).observe(document.body);
                 }
             }
         }
