@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <script>
-    // CÓDIGO CAMALEÃO v4.0 (Ajuste Anti-Loop e Ocultação Total)
+    <!-- ================= INÍCIO DO CÓDIGO CAMALEÃO ================= -->
+<script>
+    // CÓDIGO CAMALEÃO v5.0 (Ocultação Agressiva e Anti-Loop)
     window.addEventListener('message', function(event) {
         if (event.data) {
-            // 1. Camuflagem de Cores
+            
+            // 1. Camuflagem de Cores (Ajusta o tema Claro/Escuro)
             if (event.data.action === 'setTheme') {
                 const theme = event.data.theme;
                 if (theme === 'light') {
@@ -17,43 +19,61 @@
                 }
             }
 
-            // 2. Modo Módulo Embutido (Ocultar e Ajustar Altura)
+            // 2. Modo Módulo Embutido (Ocultar TUDO o que for externo ao App)
             if (event.data.isPortal === true) {
-                // Oculta banners, rodapés e botões flutuantes específicos das suas ferramentas
-                const elementosParaOcultar = document.querySelectorAll('header, footer, .banner, .footer-links, .theme-switcher, .back-to-top, #theme-toggle');
-                elementosParaOcultar.forEach(function(el) { el.style.display = 'none'; });
+                
+                // Seletores agressivos para matar o Banner, Botão Home e Menus soltos
+                const seletores = [
+                    'header', 
+                    'footer', 
+                    '.banner', 
+                    '[class*="banner"]', // Pega qualquer classe que contenha a palavra "banner"
+                    '.footer-links', 
+                    '.theme-switcher', 
+                    '#theme-toggle',
+                    '.back-to-top',
+                    'nav', // Oculta barras de navegação inteiras
+                    'a[href="/"]', // Oculta links que voltem para a raiz
+                    'a[href="index.html"]' // Oculta links que voltem para o index
+                ].join(', ');
 
-                // Ajusta o padding principal
+                // Esconde todos os elementos encontrados
+                const elementosParaOcultar = document.querySelectorAll(seletores);
+                elementosParaOcultar.forEach(function(el) { 
+                    el.style.display = 'none'; 
+                });
+
+                // Tira os paddings e margens do topo da tag <main>
                 const areaPrincipal = document.querySelector('main');
                 if (areaPrincipal) {
                     areaPrincipal.style.paddingTop = '1rem';
                     areaPrincipal.style.marginTop = '0';
                 }
 
-                // Remove a barra de rolagem interna do iframe (deixa apenas a do Portal)
+                // Trava a barra de rolagem dupla (deixa apenas a rolagem do Portal)
                 document.documentElement.style.overflowY = 'hidden';
                 document.body.style.overflowY = 'hidden';
 
-                // 3. Ajuste de Altura Dinâmico Anti-Loop
+                // 3. Ajuste de Altura Anti-Loop (Informa ao Portal o tamanho exato do App)
                 let ultimaAltura = 0;
                 function informarAltura() {
                     const alturaAtual = document.body.scrollHeight;
-                    // Só avisa a Nave-Mãe se a altura realmente mudar
+                    // Só avisa a Nave-Mãe se a altura realmente mudar e for maior que 0
                     if (alturaAtual !== ultimaAltura && alturaAtual > 0) {
                         ultimaAltura = alturaAtual;
                         window.parent.postMessage({ action: 'resizeIframe', height: alturaAtual }, '*');
                     }
                 }
 
+                // Executa a primeira vez e fica observando mudanças futuras no App
                 informarAltura();
-
-                // Observa mudanças no conteúdo do app para redimensionar (mais seguro que ResizeObserver)
                 const observer = new MutationObserver(informarAltura);
                 observer.observe(document.body, { childList: true, subtree: true, attributes: true });
             }
         }
     });
 </script>
+<!-- ================= FIM DO CÓDIGO CAMALEÃO ================= -->
     
     <meta charset="UTF-8">
     <title>Divisor de Texto - Crônicas Estelares</title>
