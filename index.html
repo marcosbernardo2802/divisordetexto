@@ -1,6 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <script>
+    // CÓDIGO CAMALEÃO v2.0: Escuta os sinais da Nave-Mãe
+    window.addEventListener('message', function(event) {
+        if (event.data) {
+            
+            // 1. Camuflagem de Cores (Dark/Light Mode)
+            if (event.data.action === 'setTheme') {
+                const theme = event.data.theme;
+                if (theme === 'light') {
+                    document.body.classList.add('light-theme');
+                    document.body.classList.remove('dark-theme');
+                } else {
+                    document.body.classList.remove('light-theme');
+                    document.body.classList.add('dark-theme');
+                }
+            }
+
+            // 2. Modo Módulo Embutido (Ocultar elementos externos)
+            if (event.data.isPortal === true) {
+                // Adiciona uma classe ao body caso queira fazer ajustes finos no CSS do app
+                document.body.classList.add('modo-portal-ativo');
+                
+                // Oculta diretamente via JavaScript os cabeçalhos, rodapés e banners
+                const elementosParaOcultar = document.querySelectorAll('header, footer, .banner, .footer-links');
+                elementosParaOcultar.forEach(function(elemento) {
+                    elemento.style.display = 'none';
+                });
+
+                // Tira os paddings gigantes (se houver) da tag <main> para colar a ferramenta no topo
+                const areaPrincipal = document.querySelector('main');
+                if (areaPrincipal) {
+                    areaPrincipal.style.paddingTop = '1rem';
+                    areaPrincipal.style.marginTop = '0';
+                }
+            }
+        }
+    });
+</script>
+    
     <meta charset="UTF-8">
     <title>Divisor de Texto - Crônicas Estelares</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
