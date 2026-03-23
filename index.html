@@ -108,14 +108,12 @@
                         color: var(--color-text) !important; 
                     }
 
-                    /* 4. Força o aplicativo a usar 100% do espaço quando estiver no Portal */
+                    /* 4. Força o aplicativo a usar 90% do espaço e centralizar quando estiver no Portal */
                     main, .container, [class*="max-w-"], [class*="w-[90%]"], [class*="w-11/12"] {
-                        width: 100% !important;
-                        max-width: 100% !important;
-                        margin-left: 0 !important;
-                        margin-right: 0 !important;
-                        /* Descomente a linha abaixo se quiser colar o conteúdo nas paredes laterais */
-                        /* padding-left: 0 !important; padding-right: 0 !important; */
+                        width: 90% !important;
+                        max-width: 90% !important;
+                        margin-left: auto !important;
+                        margin-right: auto !important;
                     }
                 `;
                 document.head.appendChild(camaleaoStyle);
@@ -208,7 +206,7 @@
             transition: background-color 0.3s ease, color 0.3s ease;
             min-height: 100vh;
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        .container { width: 90%; margin: 0 auto; padding: 2rem; }
         
         /* ---- BOTÕES FLUTUANTES ---- */
         .floating-button {
@@ -297,8 +295,8 @@
             background-color: var(--color-copy-initial);
             color: #fff;
             border: none;
-            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9em;
-            font-weight: 700; font-family: var(--font-main); transition: all 0.2s ease;
+            padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8em;
+            font-weight: 600; font-family: var(--font-main); transition: all 0.2s ease;
         }
         .copy-main-btn:hover { opacity: 0.8; }
         .copy-main-btn.copied { background-color: var(--color-copy-copied) !important; }
@@ -310,16 +308,38 @@
         }
         textarea:focus, textarea:focus-visible { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-shadow); }
 
-        .controls-wrapper { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
-        .counters-group { display: flex; gap: 10px; }
-        .char-counter, .word-counter, .narration-time { font-size: 0.9em; background-color: var(--color-bg); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--color-card-border); }
+        /* PAINEL DE CONTROLE CONSOLIDADO */
+        .editor-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .counters-group { display: flex; gap: 8px; }
+        .char-counter, .word-counter, .narration-time { font-size: 0.75em; background-color: var(--color-bg); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--color-card-border); }
         .narration-time { color: var(--color-primary); }
         
+        .settings-group {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
         /* SELETOR DE MODO */
-        .mode-selector { display: flex; background-color: var(--color-bg); border-radius: 6px; padding: 3px; border: 1px solid var(--color-card-border); }
+        .mode-selector { display: flex; background-color: var(--color-bg); border-radius: 6px; padding: 2px; border: 1px solid var(--color-card-border); }
         .mode-selector input { display: none; }
         .mode-selector label {
-            padding: 2px 8px; border-radius: 4px; cursor: pointer; font-weight: 400; font-size: 0.75em; 
+            padding: 1px 6px; border-radius: 4px; cursor: pointer; font-weight: 400; font-size: 0.7em; 
             color: var(--color-text); opacity: 0.7; transition: all 0.3s ease;
         }
         .mode-selector input:checked + label {
@@ -328,18 +348,18 @@
         .light-theme .mode-selector input:checked + label { color: #fff; }
 
         .limit-group { display: flex; align-items: center; gap: 10px; }
-        .limit-group label { font-weight: 400; font-size: 1em; } 
+        .limit-group label { font-weight: 400; font-size: 0.85em; opacity: 0.8; } 
         
         input[type="number"] {
-            width: 80px; padding: 8px; border-radius: 6px; border: 1px solid var(--color-card-border);
-            background-color: var(--color-bg); color: var(--color-text); font-family: var(--font-main); font-size: 1em; text-align: center;
+            width: 70px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--color-card-border);
+            background-color: var(--color-bg); color: var(--color-text); font-family: var(--font-main); font-size: 0.9em; text-align: center;
         }
 
-        .main-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .main-actions { display: flex; justify-content: flex-end; gap: 0.8rem; }
         .main-actions button {
-            flex-grow: 1; padding: 12px; font-size: 1.1em; font-weight: 700; border-radius: 8px; border: none;
+            padding: 6px 12px; font-size: 0.85em; font-weight: 600; border-radius: 6px; border: none;
             cursor: pointer; transition: all 0.3s ease; color: #fff;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
         }
         .main-actions button:hover { transform: translateY(-2px); opacity: 0.9; }
         .main-actions .split-btn { background-color: var(--color-copy-initial); }
@@ -358,16 +378,52 @@
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
         .part-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; }
-        .part-header h3 { color: var(--color-primary); font-size: 1em; font-weight: 400; }
+        .part-header h3 { color: var(--color-primary); font-size: 0.9em; font-weight: 600; }
+        
+        /* Ajuste de contadores nos blocos divididos */
+        .part-card .char-counter, .part-card .word-counter, .part-card .narration-time {
+            font-size: 0.68em;
+            padding: 2px 6px;
+        }
         
         .part-textarea { min-height: 150px; font-size: 1em; }
+        
         .part-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1rem; }
+        
+        /* Ajuste de botões nos blocos divididos */
         .part-actions button {
             background-color: var(--color-copy-initial); color: #fff; border: none;
-            padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease;
+            padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease;
+            font-size: 0.75em; font-weight: 600;
         }
         .part-actions button:hover { opacity: 0.8; }
         .part-actions button.copied { background-color: var(--color-copy-copied) !important; }
+
+        /* ---- MODAL DE CONFIRMAÇÃO ESTILIZADO ---- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: var(--color-card-bg); border: 1px solid var(--color-card-border);
+            padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px;
+            text-align: center; transform: scale(0.8); transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--color-shadow);
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-content h3 { color: var(--color-primary); margin-bottom: 1rem; font-size: 1.2rem; }
+        .modal-content p { margin-bottom: 2rem; color: var(--color-text); opacity: 0.9; }
+        .modal-buttons { display: flex; gap: 1rem; justify-content: center; }
+        .modal-btn {
+            padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;
+            font-weight: 700; font-family: var(--font-main); transition: all 0.2s ease;
+        }
+        .modal-btn-confirm { background: var(--color-secondary); color: white; }
+        .modal-btn-cancel { background: var(--color-card-border); color: var(--color-text); }
+        .modal-btn:hover { opacity: 0.8; transform: translateY(-2px); }
 
         /* ---- RODAPÉ ---- */
         footer { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--color-card-border); color: #888; transition: border-color 0.3s ease; }
@@ -383,6 +439,18 @@
 </head>
 <body id="top">
 
+    <!-- MODAL DE CONFIRMAÇÃO -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3><i class="fas fa-exclamation-triangle"></i> Atenção, Comandante</h3>
+            <p>Deseja realmente apagar todo o roteiro e os resultados divididos? Esta ação é irreversível.</p>
+            <div class="modal-buttons">
+                <button id="cancelClear" class="modal-btn modal-btn-cancel">Cancelar</button>
+                <button id="confirmClear" class="modal-btn modal-btn-confirm">Sim, apagar tudo</button>
+            </div>
+        </div>
+    </div>
+
     <!-- BOTÃO PARA TROCAR O TEMA -->
     <a href="https://cronicasestelares.vercel.app/" class="floating-button back-to-portal" title="Voltar ao portal Crônicas Estelares">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -395,44 +463,54 @@
     <main class="container">
         <div class="tool-banner">
             <a href="https://www.youtube.com/@CronicasEstelaress" target="_blank" rel="noopener noreferrer" title="Visite o canal Crônicas Estelares no YouTube">
-                <img class="tool-banner-image" src="https://raw.githubusercontent.com/marcosbernardo2802/portal/main/images/baner-app.png" alt="Banner ilustrativo da ferramenta Divisor de Texto">
+                <img class="tool-banner-image" src="https://i.imgur.com/GMiX6Rv.png" alt="Banner ilustrativo da ferramenta Divisor de Texto">
             </a>
         </div>
         
         <div class="app-card">
             <h2>Divisor de Texto Crônicas Estelares</h2>
+            
+            <!-- CAMPO DE TEXTO -->
             <div class="form-group">
                 <div class="label-wrapper">
                     <label>Seu roteiro completo:</label>
                     <button id="copyMainButton" class="copy-main-btn" title="Copiar todo o roteiro para a área de transferência"><i class="fas fa-copy"></i> Copiar Roteiro</button>
                 </div>
                 <textarea id="inputText" placeholder="Cole aqui o seu texto para dividir em partes menores..."></textarea>
-                <div class="controls-wrapper">
-                    <div class="counters-group">
-                        <span class="char-counter" title="Total de caracteres"><i class="fas fa-keyboard"></i> <span id="mainCharCounter">0</span></span>
-                        <span class="word-counter" title="Total de palavras"><i class="fas fa-file-word"></i> <span id="mainWordCounter">0</span></span>
+                
+                <!-- PAINEL DE CONTROLE ABAIXO DO TEXTO -->
+                <div class="editor-footer">
+                    <div class="controls-row">
+                        <!-- CONTADORES -->
+                        <div class="counters-group">
+                            <span class="char-counter" title="Total de caracteres"><i class="fas fa-keyboard"></i> <span id="mainCharCounter">0</span></span>
+                            <span class="word-counter" title="Total de palavras"><i class="fas fa-file-word"></i> <span id="mainWordCounter">0</span></span>
+                            <div class="narration-time" title="Tempo de narração aproximado, varia com a voz e ferramenta TTS."><i class="fas fa-clock"></i> aprox. <span id="mainNarrationTime">0s</span></div>
+                        </div>
+
+                        <!-- CONFIGURAÇÕES (MODO E LIMITE) -->
+                        <div class="settings-group">
+                            <div class="mode-selector">
+                                <input type="radio" id="modeChars" name="splitMode" value="chars" checked>
+                                <label for="modeChars" title="Dividir o texto com base no número de caracteres">Caracteres</label>
+                                <input type="radio" id="modeWords" name="splitMode" value="words">
+                                <label for="modeWords" title="Dividir o texto com base no número de palavras">Palavras</label>
+                            </div>
+                            <div class="limit-group">
+                                <label for="limitInput" id="limitLabel">Limite:</label>
+                                <input type="number" id="limitInput" value="4900" min="50" title="Defina o limite para cada parte dividida">
+                            </div>
+                        </div>
                     </div>
-                    <div class="narration-time" title="Tempo de narração aproximado, varia com a voz e ferramenta TTS."><i class="fas fa-clock"></i> aprox. <span id="mainNarrationTime">0s</span></div>
+
+                    <!-- BOTÕES DE AÇÃO -->
+                    <div class="main-actions">
+                        <button id="splitButton" class="split-btn" title="Dividir o texto"><i class="fas fa-scissors"></i>Dividir Texto</button>
+                        <button id="clearButton" class="clear-btn" title="Apagar tudo"><i class="fas fa-trash-alt"></i> Apagar Tudo</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="label-wrapper">
-                    <div class="mode-selector">
-                        <input type="radio" id="modeChars" name="splitMode" value="chars" checked>
-                        <label for="modeChars" title="Dividir o texto com base no número de caracteres">Caracteres</label>
-                        <input type="radio" id="modeWords" name="splitMode" value="words">
-                        <label for="modeWords" title="Dividir o texto com base no número de palavras">Palavras</label>
-                    </div>
-                    <div class="limit-group">
-                        <label for="limitInput" id="limitLabel">Caracteres por parte:</label>
-                        <input type="number" id="limitInput" value="4900" min="50" title="Defina o limite para cada parte dividida">
-                    </div>
-                </div>
-            </div>
-            <div class="main-actions">
-                <button id="splitButton" class="split-btn" title="Dividir o texto com base no modo e limite selecionados"><i class="fas fa-scissors"></i>Dividir Texto</button>
-                <button id="clearButton" class="clear-btn" title="Apagar todo o texto do roteiro e os resultados"><i class="fas fa-trash-alt"></i> Apagar Tudo</button>
-            </div>
+            
             <div id="message"></div>
         </div>
 
@@ -482,6 +560,12 @@
             const yearElement = document.getElementById('current-year');
             const copyMainButton = document.getElementById('copyMainButton');
             const modeRadios = document.querySelectorAll('input[name="splitMode"]');
+            
+            // ELEMENTOS DO MODAL
+            const confirmModal = document.getElementById('confirmModal');
+            const cancelClearBtn = document.getElementById('cancelClear');
+            const confirmClearBtn = document.getElementById('confirmClear');
+
             const localStorageKey = 'divisorTextoSalvo';
 
             // --- INICIALIZAÇÃO ---
@@ -571,12 +655,12 @@
             function updateMode() {
                 const selectedMode = document.querySelector('input[name="splitMode"]:checked').value;
                 if (selectedMode === 'chars') {
-                    limitLabel.textContent = 'Caracteres por parte:';
+                    limitLabel.textContent = 'Limite:';
                     limitInput.value = 4900;
                     limitInput.min = 50;
                     limitInput.step = 100;
                 } else {
-                    limitLabel.textContent = 'Palavras por parte:';
+                    limitLabel.textContent = 'Limite:';
                     limitInput.value = 800;
                     limitInput.min = 10;
                     limitInput.step = 10;
@@ -613,12 +697,32 @@
             function splitByChars(text, charLimit) {
                 let startIndex = 0;
                 let partNumber = 1;
+                
                 while (startIndex < text.length) {
-                    let endIndex = Math.min(startIndex + charLimit, text.length);
-                    if (endIndex < text.length) {
-                        let lastSpace = text.lastIndexOf(' ', endIndex);
-                        if (lastSpace > startIndex) endIndex = lastSpace;
+                    let endIndex = startIndex + charLimit;
+                    
+                    if (endIndex >= text.length) {
+                        endIndex = text.length;
+                    } else {
+                        const chunk = text.substring(startIndex, endIndex);
+                        const lastEllipsis = Math.max(chunk.lastIndexOf('... '), chunk.lastIndexOf('...\n'));
+                        const lastPunctuation = Math.max(
+                            chunk.lastIndexOf('. '), chunk.lastIndexOf('! '), chunk.lastIndexOf('? '),
+                            chunk.lastIndexOf('.\n'), chunk.lastIndexOf('!\n'), chunk.lastIndexOf('?\n')
+                        );
+                        
+                        let bestBreak = -1;
+                        if (lastEllipsis !== -1) bestBreak = lastEllipsis + 3;
+                        if (lastPunctuation !== -1 && lastPunctuation > bestBreak) bestBreak = lastPunctuation + 1;
+                        
+                        if (bestBreak !== -1) {
+                            endIndex = startIndex + bestBreak;
+                        } else {
+                            const lastSpace = chunk.lastIndexOf(' ');
+                            if (lastSpace !== -1) endIndex = startIndex + lastSpace;
+                        }
                     }
+                    
                     const partText = text.substring(startIndex, endIndex).trim();
                     if (partText) createPartCard(partText, partNumber++);
                     startIndex = endIndex;
@@ -640,22 +744,19 @@
                 card.className = 'app-card part-card';
                 const partTextarea = document.createElement('textarea');
                 partTextarea.className = 'part-textarea';
-                partTextarea.value = text; // Editable
+                partTextarea.value = text;
                 
                 const countersDiv = document.createElement('div');
                 countersDiv.className = 'counters-group';
                 
                 const timeSpan = document.createElement('span');
                 timeSpan.className = 'narration-time';
-                timeSpan.title = 'Tempo de narração aproximado, varia com a voz e ferramenta TTS.';
                 
                 const charSpan = document.createElement('span');
                 charSpan.className = 'char-counter';
-                charSpan.title = 'Total de caracteres';
                 
                 const wordSpan = document.createElement('span');
                 wordSpan.className = 'word-counter';
-                wordSpan.title = 'Total de palavras';
                 
                 const updatePartCounters = (currentText) => {
                     const words = currentText.trim().split(/\s+/).filter(Boolean);
@@ -665,7 +766,7 @@
                 };
 
                 partTextarea.addEventListener('input', () => updatePartCounters(partTextarea.value));
-                updatePartCounters(text); // Initial count
+                updatePartCounters(text);
 
                 countersDiv.append(timeSpan, charSpan, wordSpan);
 
@@ -716,13 +817,30 @@
 
             modeRadios.forEach(radio => radio.addEventListener('change', updateMode));
             splitButton.addEventListener('click', splitText);
+            
             clearButton.addEventListener('click', () => {
+                if (inputTextElem.value.trim() === '' && outputDiv.innerHTML === '') {
+                    return showMessage('Nada para apagar.', 'error');
+                }
+                confirmModal.classList.add('active');
+            });
+
+            cancelClearBtn.addEventListener('click', () => {
+                confirmModal.classList.remove('active');
+            });
+
+            confirmClearBtn.addEventListener('click', () => {
                 inputTextElem.value = '';
                 outputDiv.innerHTML = '';
                 localStorage.removeItem(localStorageKey);
                 updateCounters('');
-                showMessage('Tudo apagado!');
                 resetSplitButton();
+                confirmModal.classList.remove('active');
+                showMessage('Tudo apagado!');
+            });
+
+            confirmModal.addEventListener('click', (e) => {
+                if (e.target === confirmModal) confirmModal.classList.remove('active');
             });
             
             copyMainButton.addEventListener('click', () => {
