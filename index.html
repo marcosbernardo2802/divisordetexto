@@ -46,18 +46,15 @@
                 // ATAQUE 3: Caçador de Texto Implacável
                 const todosElementos = document.querySelectorAll('a, button, h1, h2, h3, h4, span, div, p, strong, b');
                 todosElementos.forEach(function(el) {
-                    // Ignora elementos com muitos filhos para não ocultar áreas úteis sem querer
                     if (el.children.length > 1) return;
                     
                     const texto = el.textContent.toLowerCase().trim();
                     const link = el.href ? el.href.toLowerCase() : '';
                     
-                    // 3.1 Caça Botão Home
                     if (texto === 'home' || texto === 'início' || texto === 'inicio' || texto === 'voltar ao portal' || link.includes('cronicasestelares.vercel.app')) {
                         el.style.display = 'none';
                     }
 
-                    // 3.2 Caça Títulos Rebeldes
                     const nomesProibidos = [
                         'divisor de texto', 
                         'conversor de roteiro para .srt', 
@@ -78,28 +75,25 @@
                 // ATAQUE 4: Camuflagem Estelar (Injeção de CSS para Cores, Transparência e Largura)
                 const camaleaoStyle = document.createElement('style');
                 camaleaoStyle.innerHTML = `
-                    /* 1. Fundo Transparente para herdar o visual da Nave-Mãe */
                     html, body, main {
                         background: transparent !important;
                         background-color: transparent !important;
                     }
 
-                    /* 2. Sobrescreve as variáveis do Comandante para as cores exatas do Portal */
                     :root {
                         --color-bg: transparent !important;
-                        --color-card-bg: #050814 !important; /* Azul quase preto do Iframe */
-                        --color-text: #e3e3e3 !important; /* Texto Escuro */
+                        --color-card-bg: #050814 !important;
+                        --color-text: #e3e3e3 !important;
                         --color-card-border: #333537 !important;
                         --color-primary: #00f2fe !important;
                     }
 
                     body.light-theme {
-                        --color-card-bg: #f0f4f9 !important; /* Surface Clara */
-                        --color-text: #1f1f1f !important; /* Texto Claro */
+                        --color-card-bg: #f0f4f9 !important;
+                        --color-text: #1f1f1f !important;
                         --color-card-border: #d1d9e0 !important;
                     }
 
-                    /* 3. Força elementos Tailwind hardcoded a respeitarem a camuflagem */
                     .bg-white, .bg-gray-900, .bg-gray-800, .bg-[#0a0f18], .bg-[#101a2d] { 
                         background-color: var(--color-card-bg) !important; 
                         border-color: var(--color-card-border) !important;
@@ -108,28 +102,27 @@
                         color: var(--color-text) !important; 
                     }
 
-                    /* 4. Força o aplicativo a usar 90% do espaço e centralizar quando estiver no Portal */
-                    main, .container, [class*="max-w-"], [class*="w-[90%]"], [class*="w-11/12"] {
+                    /* Força a largura de 90% em qualquer cenário no Portal */
+                    main, .container, [class*="max-w-"] {
                         width: 90% !important;
                         max-width: 90% !important;
                         margin-left: auto !important;
                         margin-right: auto !important;
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
                     }
                 `;
                 document.head.appendChild(camaleaoStyle);
 
-                // Limpeza da área de trabalho
                 const areaPrincipal = document.querySelector('main');
                 if (areaPrincipal) {
                     areaPrincipal.style.paddingTop = '0.5rem';
                     areaPrincipal.style.marginTop = '0';
                 }
 
-                // Trava a barra de rolagem dupla do Iframe
                 document.documentElement.style.overflowY = 'hidden';
                 document.body.style.overflowY = 'hidden';
 
-                // 3. Ajuste de Altura Anti-Loop (Comunicação com o Portal)
                 let ultimaAltura = 0;
                 function informarAltura() {
                     const alturaAtual = document.body.scrollHeight;
@@ -140,7 +133,6 @@
                 }
 
                 informarAltura();
-                // Observa mudanças na ferramenta para reajustar o tamanho caso necessário
                 const observer = new MutationObserver(informarAltura);
                 observer.observe(document.body, { childList: true, subtree: true, attributes: true });
             }
@@ -155,29 +147,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Divida textos longos em partes menores por caracteres ou palavras para facilitar a narração com IAs (TTS). Uma ferramenta gratuita para criadores de conteúdo.">
 
-    <!-- FAVICON (ÍCONE DA ABA DO NAVEGADOR) -->
     <link rel="icon" href="https://raw.githubusercontent.com/marcosbernardo2802/portal/main/images/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/marcosbernardo2802/portal/main/images/favicon.png">
 
-    <!-- Importando a fonte temática do Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-        /* ---- VARIÁVEIS DE TEMA (SINCRONIZADAS COM O PORTAL) ---- */
         :root {
             --color-bg: #0a0f18;
             --color-text: #e0e0e0;
             --color-primary: #00f2fe;
-            --color-secondary: #e63946; /* Cor de "perigo" (vermelho) */
-            --color-card-bg: rgba(16, 26, 45, 0.6); /* Transparência aumentada */
+            --color-secondary: #e63946;
+            --color-card-bg: rgba(16, 26, 45, 0.6);
             --color-card-border: #223354;
             --color-shadow: rgba(0, 242, 254, 0.2);
-            --color-copy-initial: #28a745; /* Verde inicial */
-            --color-copy-copied: #007bff; /* Azul para "copiado" */
+            --color-copy-initial: #28a745;
+            --color-copy-copied: #007bff;
             --font-main: 'Exo 2', sans-serif;
         }
 
@@ -185,19 +173,16 @@
             --color-bg: #f4f7f9;
             --color-text: #333333;
             --color-primary: #005fbd;
-            --color-secondary: #d90429; /* Vermelho mais forte para tema claro */
-            --color-card-bg: rgba(255, 255, 255, 0.6); /* Transparência aumentada */
+            --color-secondary: #d90429;
+            --color-card-bg: rgba(255, 255, 255, 0.6);
             --color-card-border: #d1d9e0;
             --color-shadow: rgba(0, 0, 0, 0.1);
             --color-copy-initial: #218838;
             --color-copy-copied: #0056b3;
         }
 
-        /* ---- ESTILOS GERAIS E RESET ---- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
         body {
             font-family: var(--font-main);
             background-color: var(--color-bg);
@@ -205,10 +190,17 @@
             line-height: 1.6;
             transition: background-color 0.3s ease, color 0.3s ease;
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        .container { width: 90%; margin: 0 auto; padding: 2rem; }
         
-        /* ---- BOTÕES FLUTUANTES ---- */
+        /* CONTENTOR FORÇADO A 90% SEM RESTRICÇÕES */
+        .container { 
+            width: 90% !important; 
+            max-width: 90% !important; 
+            margin: 0 auto !important; 
+            padding: 2rem 0 !important; 
+        }
+        
         .floating-button {
             position: fixed;
             z-index: 1000;
@@ -223,55 +215,24 @@
             align-items: center;
             transition: all 0.3s ease;
         }
-        .floating-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 10px var(--color-shadow);
-        }
-        .floating-button svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--color-primary);
-        }
+        .floating-button:hover { transform: scale(1.1); box-shadow: 0 0 10px var(--color-shadow); }
+        .floating-button svg { width: 20px; height: 20px; fill: var(--color-primary); }
         
         .theme-switcher { top: 20px; right: 20px; }
         .back-to-portal { top: 20px; left: 20px; }
-        .back-to-top {
-            bottom: 20px;
-            right: 20px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-        }
-        .back-to-top.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
+        .back-to-top { bottom: 20px; right: 20px; opacity: 0; visibility: hidden; transform: translateY(10px); }
+        .back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
 
         .light-theme #theme-icon-dark, body:not(.light-theme) #theme-icon-light { display: none; }
 
-        /* ---- ESTILO DO APLICATIVO ---- */
-        .tool-banner {
-            margin-bottom: 3rem; /* Espaço aumentado */
-        }
-        .tool-banner a {
-            display: block;
-            line-height: 0;
-        }
+        .tool-banner { margin-bottom: 3rem; }
+        .tool-banner a { display: block; line-height: 0; }
         .tool-banner-image {
-            width: 100%;
-            height: auto;
-            max-height: 125px; 
-            object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid var(--color-card-border);
+            width: 100%; height: auto; max-height: 125px; object-fit: cover;
+            border-radius: 12px; border: 1px solid var(--color-card-border);
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
-        .tool-banner-image:hover {
-            transform: scale(1.02);
-            opacity: 0.9;
-        }
+        .tool-banner-image:hover { transform: scale(1.01); opacity: 0.9; }
 
         .app-card {
             background-color: var(--color-card-bg);
@@ -283,6 +244,7 @@
             margin-bottom: 2rem;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            width: 100%;
         }
         .light-theme .app-card { box-shadow: 0 8px 25px var(--color-shadow); }
 
@@ -292,9 +254,7 @@
         .label-wrapper > label { font-size: 1em; font-weight: 400; color: var(--color-text); opacity: 0.8; }
         
         .copy-main-btn {
-            background-color: var(--color-copy-initial);
-            color: #fff;
-            border: none;
+            background-color: var(--color-copy-initial); color: #fff; border: none;
             padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8em;
             font-weight: 600; font-family: var(--font-main); transition: all 0.2s ease;
         }
@@ -306,61 +266,27 @@
             min-height: 250px; resize: vertical; background-color: var(--color-bg); color: var(--color-text);
             border: 1px solid var(--color-card-border); transition: all 0.3s ease;
         }
-        textarea:focus, textarea:focus-visible { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-shadow); }
+        textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-shadow); }
 
-        /* PAINEL DE CONTROLE CONSOLIDADO */
-        .editor-footer {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .controls-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .counters-group { display: flex; gap: 8px; }
+        .editor-footer { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+        .controls-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .counters-group { display: flex; gap: 8px; flex-wrap: wrap; }
         .char-counter, .word-counter, .narration-time { font-size: 0.75em; background-color: var(--color-bg); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--color-card-border); }
         .narration-time { color: var(--color-primary); }
         
-        .settings-group {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        /* SELETOR DE MODO */
+        .settings-group { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
         .mode-selector { display: flex; background-color: var(--color-bg); border-radius: 6px; padding: 2px; border: 1px solid var(--color-card-border); }
         .mode-selector input { display: none; }
-        .mode-selector label {
-            padding: 1px 6px; border-radius: 4px; cursor: pointer; font-weight: 400; font-size: 0.7em; 
-            color: var(--color-text); opacity: 0.7; transition: all 0.3s ease;
-        }
-        .mode-selector input:checked + label {
-            background-color: var(--color-primary); color: var(--color-bg); opacity: 1; box-shadow: 0 0 8px var(--color-shadow);
-        }
+        .mode-selector label { padding: 1px 6px; border-radius: 4px; cursor: pointer; font-weight: 400; font-size: 0.7em; color: var(--color-text); opacity: 0.7; transition: all 0.3s ease; }
+        .mode-selector input:checked + label { background-color: var(--color-primary); color: var(--color-bg); opacity: 1; }
         .light-theme .mode-selector input:checked + label { color: #fff; }
 
         .limit-group { display: flex; align-items: center; gap: 10px; }
         .limit-group label { font-weight: 400; font-size: 0.85em; opacity: 0.8; } 
-        
-        input[type="number"] {
-            width: 70px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--color-card-border);
-            background-color: var(--color-bg); color: var(--color-text); font-family: var(--font-main); font-size: 0.9em; text-align: center;
-        }
+        input[type="number"] { width: 70px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--color-card-border); background-color: var(--color-bg); color: var(--color-text); font-family: var(--font-main); font-size: 0.9em; text-align: center; }
 
         .main-actions { display: flex; justify-content: flex-end; gap: 0.8rem; }
-        .main-actions button {
-            padding: 6px 12px; font-size: 0.85em; font-weight: 600; border-radius: 6px; border: none;
-            cursor: pointer; transition: all 0.3s ease; color: #fff;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-        }
+        .main-actions button { padding: 6px 12px; font-size: 0.85em; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.3s ease; color: #fff; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .main-actions button:hover { transform: translateY(-2px); opacity: 0.9; }
         .main-actions .split-btn { background-color: var(--color-copy-initial); }
         .main-actions .split-btn.splitted { background-color: var(--color-copy-copied); }
@@ -370,80 +296,44 @@
         #message.success { color: var(--color-copy-copied); }
         #message.error { color: var(--color-secondary); }
 
-        /* ---- ÁREA DE RESULTADOS ---- */
-        .part-card {
-            margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px);
-            animation: fadeIn 0.5s ease-out forwards;
-        }
+        .part-card { margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); animation: fadeIn 0.5s ease-out forwards; width: 100%; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
-
         .part-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; }
         .part-header h3 { color: var(--color-primary); font-size: 0.9em; font-weight: 600; }
-        
-        /* Ajuste de contadores nos blocos divididos */
-        .part-card .char-counter, .part-card .word-counter, .part-card .narration-time {
-            font-size: 0.68em;
-            padding: 2px 6px;
-        }
-        
+        .part-card .char-counter, .part-card .word-counter, .part-card .narration-time { font-size: 0.68em; padding: 2px 6px; }
         .part-textarea { min-height: 150px; font-size: 1em; }
-        
         .part-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1rem; }
-        
-        /* Ajuste de botões nos blocos divididos */
-        .part-actions button {
-            background-color: var(--color-copy-initial); color: #fff; border: none;
-            padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease;
-            font-size: 0.75em; font-weight: 600;
-        }
+        .part-actions button { background-color: var(--color-copy-initial); color: #fff; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-size: 0.75em; font-weight: 600; }
         .part-actions button:hover { opacity: 0.8; }
         .part-actions button.copied { background-color: var(--color-copy-copied) !important; }
 
-        /* ---- MODAL DE CONFIRMAÇÃO ESTILIZADO ---- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: var(--color-card-bg); border: 1px solid var(--color-card-border);
-            padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px;
-            text-align: center; transform: scale(0.8); transition: all 0.3s ease;
-            box-shadow: 0 0 20px var(--color-shadow);
-        }
+        .modal-content { background: var(--color-card-bg); border: 1px solid var(--color-card-border); padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; transform: scale(0.8); transition: all 0.3s ease; box-shadow: 0 0 20px var(--color-shadow); }
         .modal-overlay.active .modal-content { transform: scale(1); }
         .modal-content h3 { color: var(--color-primary); margin-bottom: 1rem; font-size: 1.2rem; }
         .modal-content p { margin-bottom: 2rem; color: var(--color-text); opacity: 0.9; }
         .modal-buttons { display: flex; gap: 1rem; justify-content: center; }
-        .modal-btn {
-            padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;
-            font-weight: 700; font-family: var(--font-main); transition: all 0.2s ease;
-        }
+        .modal-btn { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 700; font-family: var(--font-main); transition: all 0.2s ease; }
         .modal-btn-confirm { background: var(--color-secondary); color: white; }
         .modal-btn-cancel { background: var(--color-card-border); color: var(--color-text); }
-        .modal-btn:hover { opacity: 0.8; transform: translateY(-2px); }
 
-        /* ---- RODAPÉ ---- */
         footer { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--color-card-border); color: #888; transition: border-color 0.3s ease; }
         .footer-wrapper { display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; }
         .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-bottom: 0.5rem; }
-        .footer-link, .donation-link, .email-link { color: var(--color-text); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s, text-shadow 0.3s; }
-        .footer-link:hover, .donation-link:hover, .email-link:hover { color: var(--color-primary); text-shadow: 0 0 8px var(--color-shadow); }
-        .footer-link:hover span, .donation-link:hover span, .email-link:hover span { text-decoration: underline; }
+        .footer-link, .donation-link, .email-link { color: var(--color-text); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s; }
+        .footer-link:hover, .donation-link:hover, .email-link:hover { color: var(--color-primary); }
         .youtube-icon { width: 28px; height: 20px; flex-shrink: 0; }
-        .donation-link svg, .email-link svg { width: 20px; height: 20px; fill: var(--color-primary); transition: fill 0.3s; }
+        .donation-link svg, .email-link svg { width: 20px; height: 20px; fill: var(--color-primary); }
         .copyright-text { font-size: 0.9em; color: #888; }
     </style>
 </head>
 <body id="top">
 
-    <!-- MODAL DE CONFIRMAÇÃO -->
     <div id="confirmModal" class="modal-overlay">
         <div class="modal-content">
             <h3><i class="fas fa-exclamation-triangle"></i> Atenção, Comandante</h3>
-            <p>Deseja realmente apagar todo o roteiro e os resultados divididos? Esta ação é irreversível.</p>
+            <p>Deseja realmente apagar todo o guião e os resultados divididos? Esta ação é irreversível.</p>
             <div class="modal-buttons">
                 <button id="cancelClear" class="modal-btn modal-btn-cancel">Cancelar</button>
                 <button id="confirmClear" class="modal-btn modal-btn-confirm">Sim, apagar tudo</button>
@@ -451,7 +341,6 @@
         </div>
     </div>
 
-    <!-- BOTÃO PARA TROCAR O TEMA -->
     <a href="https://cronicasestelares.vercel.app/" class="floating-button back-to-portal" title="Voltar ao portal Crônicas Estelares">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
     </a>
@@ -470,43 +359,38 @@
         <div class="app-card">
             <h2>Divisor de Texto Crônicas Estelares</h2>
             
-            <!-- CAMPO DE TEXTO -->
             <div class="form-group">
                 <div class="label-wrapper">
-                    <label>Seu roteiro completo:</label>
-                    <button id="copyMainButton" class="copy-main-btn" title="Copiar todo o roteiro para a área de transferência"><i class="fas fa-copy"></i> Copiar Roteiro</button>
+                    <label>O seu guião completo:</label>
+                    <button id="copyMainButton" class="copy-main-btn" title="Copiar todo o guião"><i class="fas fa-copy"></i> Copiar Guião</button>
                 </div>
-                <textarea id="inputText" placeholder="Cole aqui o seu texto para dividir em partes menores..."></textarea>
+                <textarea id="inputText" placeholder="Cole aqui o seu texto para dividir..."></textarea>
                 
-                <!-- PAINEL DE CONTROLE ABAIXO DO TEXTO -->
                 <div class="editor-footer">
                     <div class="controls-row">
-                        <!-- CONTADORES -->
                         <div class="counters-group">
                             <span class="char-counter" title="Total de caracteres"><i class="fas fa-keyboard"></i> <span id="mainCharCounter">0</span></span>
                             <span class="word-counter" title="Total de palavras"><i class="fas fa-file-word"></i> <span id="mainWordCounter">0</span></span>
-                            <div class="narration-time" title="Tempo de narração aproximado, varia com a voz e ferramenta TTS."><i class="fas fa-clock"></i> aprox. <span id="mainNarrationTime">0s</span></div>
+                            <div class="narration-time" title="Tempo de narração aprox."><i class="fas fa-clock"></i> aprox. <span id="mainNarrationTime">0s</span></div>
                         </div>
 
-                        <!-- CONFIGURAÇÕES (MODO E LIMITE) -->
                         <div class="settings-group">
                             <div class="mode-selector">
                                 <input type="radio" id="modeChars" name="splitMode" value="chars" checked>
-                                <label for="modeChars" title="Dividir o texto com base no número de caracteres">Caracteres</label>
+                                <label for="modeChars">Caracteres</label>
                                 <input type="radio" id="modeWords" name="splitMode" value="words">
-                                <label for="modeWords" title="Dividir o texto com base no número de palavras">Palavras</label>
+                                <label for="modeWords">Palavras</label>
                             </div>
                             <div class="limit-group">
                                 <label for="limitInput" id="limitLabel">Limite:</label>
-                                <input type="number" id="limitInput" value="4900" min="50" title="Defina o limite para cada parte dividida">
+                                <input type="number" id="limitInput" value="4900" min="50">
                             </div>
                         </div>
                     </div>
 
-                    <!-- BOTÕES DE AÇÃO -->
                     <div class="main-actions">
-                        <button id="splitButton" class="split-btn" title="Dividir o texto"><i class="fas fa-scissors"></i>Dividir Texto</button>
-                        <button id="clearButton" class="clear-btn" title="Apagar tudo"><i class="fas fa-trash-alt"></i> Apagar Tudo</button>
+                        <button id="splitButton" class="split-btn"><i class="fas fa-scissors"></i>Dividir Texto</button>
+                        <button id="clearButton" class="clear-btn"><i class="fas fa-trash-alt"></i> Apagar Tudo</button>
                     </div>
                 </div>
             </div>
@@ -517,24 +401,23 @@
         <div id="output"></div>
     </main>
 
-    <!-- RODAPÉ -->
     <footer>
         <div class="container footer-wrapper">
             <div class="footer-links">
                 <a href="https://www.youtube.com/@CronicasEstelaress" target="_blank" rel="noopener noreferrer" class="footer-link">
-                    <svg class="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="4" fill="#FF0000"/><path d="M11,14 L18,10 L11,6 V14 Z" fill="#FFFFFF"/></svg>
-                    <span>Acesse nosso canal no YouTube</span>
+                    <svg class="youtube-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 20"><rect width="28" height="20" rx="4" fill="#FF0000"/><path d="M11,14 L18,10 L11,6 V14 Z" fill="#FFFFFF"/></svg>
+                    <span>Aceda ao canal no YouTube</span>
                 </a>
                 <a href="https://page-doacao.vercel.app/" target="_blank" rel="noopener noreferrer" class="donation-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                     <span>Apoie este projeto</span>
                 </a>
                 <a href="mailto:cronicasestelares.oficial@gmail.com" target="_blank" rel="noopener noreferrer" class="email-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                     <span>cronicasestelares.oficial@gmail.com</span>
                 </a>
             </div>
-            <p class="copyright-text">&copy; <span id="current-year"></span> Crônicas Estelares. Todos os sistemas operacionais.</p>
+            <p class="copyright-text">&copy; <span id="current-year"></span> Crônicas Estelares. Todos os sistemas operativos.</p>
         </div>
     </footer>
     
@@ -544,7 +427,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- ELEMENTOS DO DOM ---
             const inputTextElem = document.getElementById('inputText');
             const limitInput = document.getElementById('limitInput');
             const limitLabel = document.getElementById('limitLabel');
@@ -560,15 +442,11 @@
             const yearElement = document.getElementById('current-year');
             const copyMainButton = document.getElementById('copyMainButton');
             const modeRadios = document.querySelectorAll('input[name="splitMode"]');
-            
-            // ELEMENTOS DO MODAL
             const confirmModal = document.getElementById('confirmModal');
             const cancelClearBtn = document.getElementById('cancelClear');
             const confirmClearBtn = document.getElementById('confirmClear');
-
             const localStorageKey = 'divisorTextoSalvo';
 
-            // --- INICIALIZAÇÃO ---
             if (yearElement) yearElement.textContent = new Date().getFullYear();
             
             const applyInitialTheme = () => {
@@ -583,12 +461,8 @@
             applyInitialTheme();
 
             const savedText = localStorage.getItem(localStorageKey);
-            if (savedText) {
-                inputTextElem.value = savedText;
-                updateCounters(savedText);
-            }
+            if (savedText) { inputTextElem.value = savedText; updateCounters(savedText); }
 
-            // --- FUNÇÕES ---
             function showMessage(msg, type = 'success') {
                 messageDiv.textContent = msg;
                 messageDiv.className = type;
@@ -611,19 +485,11 @@
                 mainNarrationTime.textContent = formatNarrationTime(text.length);
             }
             
-            function resetCopyButtons() {
-                document.querySelectorAll('.copied').forEach(activeButton => {
-                    activeButton.classList.remove('copied');
-                    if (activeButton.id === 'copyMainButton') {
-                        activeButton.innerHTML = '<i class="fas fa-copy"></i> Copiar Roteiro';
-                    } else {
-                        activeButton.innerHTML = '<i class="fas fa-copy"></i> Copiar';
-                    }
-                });
-            }
-
             async function copyToClipboard(text, button, textareaToSelect) {
-                resetCopyButtons();
+                document.querySelectorAll('.copied').forEach(el => {
+                    el.classList.remove('copied');
+                    el.innerHTML = el.id === 'copyMainButton' ? '<i class="fas fa-copy"></i> Copiar Guião' : '<i class="fas fa-copy"></i> Copiar';
+                });
                 let success = false;
                 try {
                     await navigator.clipboard.writeText(text);
@@ -631,98 +497,55 @@
                 } catch (err) {
                     const textArea = document.createElement("textarea");
                     textArea.value = text;
-                    textArea.style.position = "fixed"; textArea.style.top = "-9999px"; textArea.style.left = "-9999px";
+                    textArea.style.position = "fixed"; textArea.style.top = "-9999px";
                     document.body.appendChild(textArea);
-                    textArea.focus();
                     textArea.select();
-                    try {
-                        document.execCommand('copy');
-                        success = true;
-                    } catch (execErr) {
-                        showMessage('Falha ao copiar. Tente manualmente.', 'error');
-                    } finally {
-                        document.body.removeChild(textArea);
-                    }
+                    try { document.execCommand('copy'); success = true; } finally { document.body.removeChild(textArea); }
                 }
                 if (success) {
                     button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
                     button.classList.add('copied');
-                    showMessage('Texto copiado com sucesso!', 'success');
+                    showMessage('Texto copiado!', 'success');
                     if (textareaToSelect) textareaToSelect.select();
                 }
             }
             
             function updateMode() {
-                const selectedMode = document.querySelector('input[name="splitMode"]:checked').value;
-                if (selectedMode === 'chars') {
-                    limitLabel.textContent = 'Limite:';
-                    limitInput.value = 4900;
-                    limitInput.min = 50;
-                    limitInput.step = 100;
-                } else {
-                    limitLabel.textContent = 'Limite:';
-                    limitInput.value = 800;
-                    limitInput.min = 10;
-                    limitInput.step = 10;
-                }
+                const isChars = document.querySelector('input[name="splitMode"]:checked').value === 'chars';
+                limitInput.value = isChars ? 4900 : 800;
             }
             
-            function resetSplitButton() {
-                splitButton.classList.remove('splitted');
-                splitButton.innerHTML = '<i class="fas fa-scissors"></i>Dividir Texto';
-            }
-
             function splitText() {
-                const inputText = inputTextElem.value.trim();
+                const text = inputTextElem.value.trim();
                 const limit = parseInt(limitInput.value, 10);
                 const mode = document.querySelector('input[name="splitMode"]:checked').value;
                 outputDiv.innerHTML = '';
-                
-                if (!inputText) return showMessage('Por favor, insira um texto para dividir.', 'error');
-                if (isNaN(limit) || limit <= 0) return showMessage('O limite deve ser um número positivo.', 'error');
-
-                if (mode === 'chars') {
-                    splitByChars(inputText, limit);
-                } else {
-                    splitByWords(inputText, limit);
-                }
-                
+                if (!text) return showMessage('Insira um texto.', 'error');
+                if (mode === 'chars') splitByChars(text, limit); else splitByWords(text, limit);
                 if (outputDiv.children.length > 0) {
-                    showMessage('Texto dividido com sucesso!', 'success');
+                    showMessage('Texto dividido!', 'success');
                     splitButton.classList.add('splitted');
                     splitButton.innerHTML = '<i class="fas fa-check"></i> Texto Dividido';
                 }
             }
 
             function splitByChars(text, charLimit) {
-                let startIndex = 0;
-                let partNumber = 1;
-                
+                let startIndex = 0; let partNumber = 1;
                 while (startIndex < text.length) {
                     let endIndex = startIndex + charLimit;
-                    
-                    if (endIndex >= text.length) {
-                        endIndex = text.length;
-                    } else {
+                    if (endIndex >= text.length) { endIndex = text.length; } else {
                         const chunk = text.substring(startIndex, endIndex);
                         const lastEllipsis = Math.max(chunk.lastIndexOf('... '), chunk.lastIndexOf('...\n'));
                         const lastPunctuation = Math.max(
                             chunk.lastIndexOf('. '), chunk.lastIndexOf('! '), chunk.lastIndexOf('? '),
                             chunk.lastIndexOf('.\n'), chunk.lastIndexOf('!\n'), chunk.lastIndexOf('?\n')
                         );
-                        
                         let bestBreak = -1;
                         if (lastEllipsis !== -1) bestBreak = lastEllipsis + 3;
                         if (lastPunctuation !== -1 && lastPunctuation > bestBreak) bestBreak = lastPunctuation + 1;
-                        
-                        if (bestBreak !== -1) {
-                            endIndex = startIndex + bestBreak;
-                        } else {
-                            const lastSpace = chunk.lastIndexOf(' ');
-                            if (lastSpace !== -1) endIndex = startIndex + lastSpace;
-                        }
+                        if (bestBreak !== -1) endIndex = startIndex + bestBreak;
+                        else { const lastSpace = chunk.lastIndexOf(' '); if (lastSpace !== -1) endIndex = startIndex + lastSpace; }
                     }
-                    
                     const partText = text.substring(startIndex, endIndex).trim();
                     if (partText) createPartCard(partText, partNumber++);
                     startIndex = endIndex;
@@ -734,8 +557,7 @@
                 let partNumber = 1;
                 for (let i = 0; i < words.length; i += wordLimit) {
                     const chunk = words.slice(i, i + wordLimit);
-                    const partText = chunk.join(' ');
-                    if (partText) createPartCard(partText, partNumber++);
+                    createPartCard(chunk.join(' '), partNumber++);
                 }
             }
             
@@ -745,108 +567,47 @@
                 const partTextarea = document.createElement('textarea');
                 partTextarea.className = 'part-textarea';
                 partTextarea.value = text;
-                
                 const countersDiv = document.createElement('div');
                 countersDiv.className = 'counters-group';
-                
-                const timeSpan = document.createElement('span');
-                timeSpan.className = 'narration-time';
-                
-                const charSpan = document.createElement('span');
-                charSpan.className = 'char-counter';
-                
-                const wordSpan = document.createElement('span');
-                wordSpan.className = 'word-counter';
-                
-                const updatePartCounters = (currentText) => {
-                    const words = currentText.trim().split(/\s+/).filter(Boolean);
-                    timeSpan.innerHTML = `<i class="fas fa-clock"></i> aprox. ${formatNarrationTime(currentText.length)}`;
-                    charSpan.innerHTML = `<i class="fas fa-keyboard"></i> ${currentText.length}`;
-                    wordSpan.innerHTML = `<i class="fas fa-file-word"></i> ${words.length}`;
+                const timeSpan = document.createElement('span'); timeSpan.className = 'narration-time';
+                const charSpan = document.createElement('span'); charSpan.className = 'char-counter';
+                const wordSpan = document.createElement('span'); wordSpan.className = 'word-counter';
+                const updatePartCounters = (txt) => {
+                    const wds = txt.trim().split(/\s+/).filter(Boolean);
+                    timeSpan.innerHTML = `<i class="fas fa-clock"></i> ${formatNarrationTime(txt.length)}`;
+                    charSpan.innerHTML = `<i class="fas fa-keyboard"></i> ${txt.length}`;
+                    wordSpan.innerHTML = `<i class="fas fa-file-word"></i> ${wds.length}`;
                 };
-
                 partTextarea.addEventListener('input', () => updatePartCounters(partTextarea.value));
                 updatePartCounters(text);
-
                 countersDiv.append(timeSpan, charSpan, wordSpan);
-
                 card.innerHTML = `<div class="part-header"><h3>Parte ${number}</h3></div>`;
                 card.querySelector('.part-header').appendChild(countersDiv);
                 card.appendChild(partTextarea);
-                
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'part-actions';
-                
                 const copyButton = document.createElement('button');
-                copyButton.className = 'copy-part-btn';
                 copyButton.innerHTML = '<i class="fas fa-copy"></i> Copiar';
-                copyButton.title = "Copiar o texto desta parte";
-                copyButton.addEventListener('click', (e) => {
-                    copyToClipboard(partTextarea.value, e.currentTarget, partTextarea);
-                });
-                
+                copyButton.addEventListener('click', (e) => copyToClipboard(partTextarea.value, e.currentTarget, partTextarea));
                 actionsDiv.appendChild(copyButton);
                 card.appendChild(actionsDiv);
                 outputDiv.appendChild(card);
             }
 
-            // --- EVENT LISTENERS ---
             themeToggleButton.addEventListener('click', () => {
                 const isLight = document.body.classList.toggle('light-theme');
                 localStorage.setItem('theme', isLight ? 'light' : 'dark');
             });
-            
-            window.addEventListener("scroll", () => {
-                if (backToTopButton) {
-                    backToTopButton.classList.toggle("show", window.scrollY > 300);
-                }
-            });
-
-            if (backToTopButton) {
-                backToTopButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-            }
-
-            inputTextElem.addEventListener('input', (event) => {
-                updateCounters(event.target.value);
-                localStorage.setItem(localStorageKey, event.target.value);
-                resetSplitButton();
-            });
-
+            window.addEventListener("scroll", () => { backToTopButton.classList.toggle("show", window.scrollY > 300); });
+            backToTopButton.addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+            inputTextElem.addEventListener('input', (e) => { updateCounters(e.target.value); localStorage.setItem(localStorageKey, e.target.value); splitButton.innerHTML = '<i class="fas fa-scissors"></i>Dividir Texto'; });
             modeRadios.forEach(radio => radio.addEventListener('change', updateMode));
             splitButton.addEventListener('click', splitText);
-            
-            clearButton.addEventListener('click', () => {
-                if (inputTextElem.value.trim() === '' && outputDiv.innerHTML === '') {
-                    return showMessage('Nada para apagar.', 'error');
-                }
-                confirmModal.classList.add('active');
-            });
-
-            cancelClearBtn.addEventListener('click', () => {
-                confirmModal.classList.remove('active');
-            });
-
-            confirmClearBtn.addEventListener('click', () => {
-                inputTextElem.value = '';
-                outputDiv.innerHTML = '';
-                localStorage.removeItem(localStorageKey);
-                updateCounters('');
-                resetSplitButton();
-                confirmModal.classList.remove('active');
-                showMessage('Tudo apagado!');
-            });
-
-            confirmModal.addEventListener('click', (e) => {
-                if (e.target === confirmModal) confirmModal.classList.remove('active');
-            });
-            
-            copyMainButton.addEventListener('click', () => {
-                if (!inputTextElem.value) return showMessage('Não há roteiro para copiar.', 'error');
-                copyToClipboard(inputTextElem.value, copyMainButton, inputTextElem);
-            });
+            clearButton.addEventListener('click', () => { if (!inputTextElem.value.trim() && !outputDiv.innerHTML) return showMessage('Nada para apagar.', 'error'); confirmModal.classList.add('active'); });
+            cancelClearBtn.addEventListener('click', () => confirmModal.classList.remove('active'));
+            confirmClearBtn.addEventListener('click', () => { inputTextElem.value = ''; outputDiv.innerHTML = ''; localStorage.removeItem(localStorageKey); updateCounters(''); confirmModal.classList.remove('active'); showMessage('Tudo apagado!'); });
+            confirmModal.addEventListener('click', (e) => { if (e.target === confirmModal) confirmModal.classList.remove('active'); });
+            copyMainButton.addEventListener('click', () => { if (!inputTextElem.value) return showMessage('Nada para copiar.', 'error'); copyToClipboard(inputTextElem.value, copyMainButton, inputTextElem); });
         });
     </script>
 </body>
