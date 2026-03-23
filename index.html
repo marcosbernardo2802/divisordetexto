@@ -183,6 +183,29 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+
+        /* ESTILIZAÇÃO DAS BARRAS DE ROLAGEM */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-card-border);
+            border-radius: 10px;
+            border: 2px solid var(--color-bg);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary);
+        }
+        /* Para Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-card-border) var(--color-bg);
+        }
+
         body {
             font-family: var(--font-main);
             background-color: var(--color-bg);
@@ -193,7 +216,6 @@
             overflow-x: hidden;
         }
         
-        /* CONTENTOR FORÇADO A 95% SEM RESTRICÇÕES */
         .container { 
             width: 95% !important; 
             max-width: 95% !important; 
@@ -333,7 +355,7 @@
     <div id="confirmModal" class="modal-overlay">
         <div class="modal-content">
             <h3><i class="fas fa-exclamation-triangle"></i> Atenção, Comandante</h3>
-            <p>Deseja realmente apagar todo o guião e os resultados divididos? Esta ação é irreversível.</p>
+            <p>Deseja realmente apagar todo o guião e os resultados divididos? Esta acção é irreversível.</p>
             <div class="modal-buttons">
                 <button id="cancelClear" class="modal-btn modal-btn-cancel">Cancelar</button>
                 <button id="confirmClear" class="modal-btn modal-btn-confirm">Sim, apagar tudo</button>
@@ -364,7 +386,7 @@
                     <label>O seu guião completo:</label>
                     <button id="copyMainButton" class="copy-main-btn" title="Copiar todo o guião"><i class="fas fa-copy"></i> Copiar Guião</button>
                 </div>
-                <textarea id="inputText" placeholder="Cole aqui o seu texto para dividir em partes menores..."></textarea>
+                <textarea id="inputText" placeholder="Cole aqui o seu texto para dividir..."></textarea>
                 
                 <div class="editor-footer">
                     <div class="controls-row">
